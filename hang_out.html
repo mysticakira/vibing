@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangout Challenge 🎮</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #6dd5fa, #2980b9, #84fab0, #8fd3f4);
+            background-size: 400% 400%;
+            animation: bg 12s ease infinite;
+        }
+
+        @keyframes bg {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            text-align: center;
+            color: white;
+            z-index: 2;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 30px;
+            opacity: .9;
+        }
+
+        button {
+            border: none;
+            border-radius: 14px;
+            padding: 16px 34px;
+            font-size: 22px;
+            cursor: pointer;
+            transition: .25s;
+            font-weight: bold;
+        }
+
+        #yes {
+            background: #2ecc71;
+            color: white;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+        }
+
+        #yes:hover {
+            transform: scale(1.05);
+        }
+
+        #no {
+            position: absolute;
+            background: #e74c3c;
+            color: white;
+        }
+
+        .popup {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            color: #333;
+            padding: 14px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: .3s;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+        }
+
+        .achievement {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f1c40f;
+            color: #222;
+            padding: 15px 22px;
+            border-radius: 15px;
+            font-weight: bold;
+            transform: translateX(150%);
+            transition: .5s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .25);
+        }
+
+        .emoji {
+            position: fixed;
+            font-size: 28px;
+            animation: float 8s linear infinite;
+            opacity: .8;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(110vh) rotate(0deg);
+            }
+
+            to {
+                transform: translateY(-120vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎮 Hangout Challenge</h1>
+        <p>Can you escape without pressing <b>YES</b>? 😏</p>
+
+        <button id="yes">YES! 😎</button>
+    </div>
+
+    <button id="no">No 😐</button>
+
+    <div class="popup" id="popup"></div>
+    <div class="achievement" id="achievement"></div>
+
+    <script>
+
+        const yes = document.getElementById("yes");
+        const no = document.getElementById("no");
+        const popup = document.getElementById("popup");
+        const achievement = document.getElementById("achievement");
+
+        const buttonTexts = [
+            "No 😐",
+            "Are you sure? 🤔",
+            "Think again 👀",
+            "Come on 😄",
+            "It'll be fun 🎉",
+            "We'll get snacks 🍕",
+            "You pick the place ☕",
+            "You choose the playlist 🎵",
+            "We'll only stay a bit ⏰",
+            "My memes are waiting 😂",
+            "Achievement Incoming 👀",
+            "Still chasing? 😆",
+            "You're committed 😂",
+            "Professional Button Chaser 🏃",
+            "Last chance... maybe 😅",
+            "You almost got me!",
+            "404: No button not found 🤖",
+            "Seriously?? 😂",
+            "You're too good!",
+            "Okay okay..."
+        ];
+
+        const popups = [
+            "💨 Missed me!",
+            "😂 Nice try!",
+            "🎮 Combo +1",
+            "🏃 Too slow!",
+            "🍕 Snacks are involved!",
+            "😎 Keep going!",
+            "🎉 So close!",
+            "👀 Almost!",
+            "🤣 You wish!",
+            "⚡ Teleport!"
+        ];
+
+        const achievements = {
+            3: "🏆 Achievement: Curious Friend",
+            6: "🏆 Achievement: Snack Hunter",
+            9: "🏆 Achievement: Persistent",
+            12: "🏆 Achievement: Social Butterfly",
+            15: "🏆 Achievement: Button Chaser PRO"
+        };
+
+        let attempts = 0;
+        let yesScale = 1;
+
+        function randomPopup() {
+            popup.textContent = popups[Math.floor(Math.random() * popups.length)];
+            popup.style.opacity = 1;
+            clearTimeout(popup.timer);
+            popup.timer = setTimeout(() => popup.style.opacity = 0, 1200);
+        }
+
+        function showAchievement(text) {
+            achievement.textContent = text;
+            achievement.style.transform = "translateX(0)";
+            setTimeout(() => {
+                achievement.style.transform = "translateX(150%)";
+            }, 2500);
+        }
+
+        function moveButton() {
+
+            if (attempts == 15) {
+                fakeVictory();
+                return;
+            }
+
+            const padding = 20;
+
+            const x = Math.random() * (window.innerWidth - no.offsetWidth - padding);
+            const y = Math.random() * (window.innerHeight - no.offsetHeight - padding);
+
+            no.style.left = x + "px";
+            no.style.top = y + "px";
+
+            no.textContent = buttonTexts[Math.min(attempts, buttonTexts.length - 1)];
+
+            attempts++;
+
+            yesScale += 0.05;
+            yes.style.transform = `scale(${yesScale})`;
+
+            randomPopup();
+
+            if (achievements[attempts]) {
+                showAchievement(achievements[attempts]);
+            }
+
+        }
+
+        function fakeVictory() {
+
+            popup.style.opacity = 1;
+            popup.innerHTML = "🏆 Achievement Unlocked:<br><b>Professional Button Chaser!</b><br>🎉 You finally caught me!";
+
+            no.style.transition = "none";
+
+            setTimeout(() => {
+
+                popup.innerHTML = "😂 Just kidding... Round 2!";
+
+                const x = Math.random() * (window.innerWidth - no.offsetWidth);
+                const y = Math.random() * (window.innerHeight - no.offsetHeight);
+
+                no.style.left = x + "px";
+                no.style.top = y + "px";
+
+                attempts = 0;
+                yesScale = 1;
+                yes.style.transform = "scale(1)";
+                no.textContent = "No 😐";
+
+                setTimeout(() => {
+                    popup.style.opacity = 0;
+                }, 1500);
+
+            }, 2000);
+
+        }
+
+        document.addEventListener("mousemove", (e) => {
+
+            const r = no.getBoundingClientRect();
+
+            const dx = e.clientX - (r.left + r.width / 2);
+            const dy = e.clientY - (r.top + r.height / 2);
+
+            if (Math.sqrt(dx * dx + dy * dy) < 120) {
+                moveButton();
+            }
+
+        });
+
+        document.addEventListener("touchstart", (e) => {
+
+            const t = e.touches[0];
+
+            const r = no.getBoundingClientRect();
+
+            const dx = t.clientX - (r.left + r.width / 2);
+            const dy = t.clientY - (r.top + r.height / 2);
+
+            if (Math.sqrt(dx * dx + dy * dy) < 140) {
+                moveButton();
+            }
+
+        });
+
+        no.onclick = (e) => {
+            e.preventDefault();
+            moveButton();
+        };
+
+        no.ontouchstart = (e) => {
+            e.preventDefault();
+            moveButton();
+        };
+
+        yes.onclick = () => {
+
+            document.body.innerHTML = `
+<style>
+body{
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial;
+background:linear-gradient(135deg,#43cea2,#185a9d);
+color:white;
+overflow:hidden;
+text-align:center;
+}
+h1{font-size:3.5rem;}
+p{font-size:1.4rem;margin-top:20px;}
+.confetti{
+position:fixed;
+font-size:30px;
+animation:fall 3s linear infinite;
+}
+@keyframes fall{
+from{transform:translateY(-100px);}
+to{transform:translateY(110vh) rotate(360deg);}
+}
+</style>
+
+<div>
+<h1>🎉 LET'S HANG OUT! 🎉</h1>
+<p>You passed the challenge 😎</p>
+<p>See you soon! 🍕☕🎮</p>
+</div>
+`;
+
+            const emojis = ["🎉", "🎊", "🍕", "☕", "🎮", "😎", "🍟", "✨"];
+
+            for (let i = 0; i < 70; i++) {
+
+                const d = document.createElement("div");
+                d.className = "confetti";
+                d.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                d.style.left = Math.random() * 100 + "vw";
+                d.style.animationDelay = Math.random() * 3 + "s";
+                d.style.fontSize = (20 + Math.random() * 25) + "px";
+
+                document.body.appendChild(d);
+
+            }
+
+        };
+
+        moveButton();
+
+        const bg = ["🍕", "☕", "🎮", "🍟", "😎", "🎉", "✨", "🍔"];
+
+        setInterval(() => {
+
+            const e = document.createElement("div");
+            e.className = "emoji";
+            e.innerHTML = bg[Math.floor(Math.random() * bg.length)];
+            e.style.left = Math.random() * 100 + "vw";
+            e.style.animationDuration = (6 + Math.random() * 5) + "s";
+            e.style.fontSize = (20 + Math.random() * 20) + "px";
+            document.body.appendChild(e);
+
+            setTimeout(() => e.remove(), 10000);
+
+        }, 800);
+
+    </script>
+
+</body>
+
+</html>
