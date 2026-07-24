@@ -79,21 +79,36 @@
             position: absolute;
             background: #e74c3c;
             color: white;
+
+            z-index: 100;
+
+            transition:
+                left .18s ease,
+                top .18s ease,
+                transform .18s ease;
         }
 
         .popup {
             position: fixed;
-            bottom: 30px;
+            top: 18%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -20px) scale(.8);
+
             background: white;
-            color: #333;
-            padding: 14px 24px;
-            border-radius: 30px;
+            color: #222;
+
+            padding: 18px 34px;
+            border-radius: 18px;
+
             font-weight: bold;
+            font-size: 1.3rem;
+
             opacity: 0;
-            transition: .3s;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+            transition: all .25s ease;
+
+            z-index: 999;
+
+            box-shadow: 0 18px 45px rgba(0, 0, 0, .35);
         }
 
         .achievement {
@@ -125,6 +140,31 @@
             to {
                 transform: translateY(-120vh) rotate(360deg);
             }
+        }
+
+        @media (max-width:768px) {
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            p {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+
+            button {
+                font-size: 18px;
+                padding: 14px 22px;
+                min-width: 120px;
+            }
+
+            .popup {
+                width: 85%;
+                font-size: 1.1rem;
+                text-align: center;
+            }
+
         }
     </style>
 </head>
@@ -198,10 +238,24 @@
         let yesScale = 1;
 
         function randomPopup() {
-            popup.textContent = popups[Math.floor(Math.random() * popups.length)];
+
+            popup.textContent =
+                popups[Math.floor(Math.random() * popups.length)];
+
             popup.style.opacity = 1;
+            popup.style.transform =
+                "translate(-50%,0) scale(1.08)";
+
             clearTimeout(popup.timer);
-            popup.timer = setTimeout(() => popup.style.opacity = 0, 1200);
+
+            popup.timer = setTimeout(() => {
+
+                popup.style.opacity = 0;
+                popup.style.transform =
+                    "translate(-50%,-20px) scale(.8)";
+
+            }, 1100);
+
         }
 
         function showAchievement(text) {
@@ -221,17 +275,39 @@
 
             const padding = 20;
 
-            const x = Math.random() * (window.innerWidth - no.offsetWidth - padding);
-            const y = Math.random() * (window.innerHeight - no.offsetHeight - padding);
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            let x, y;
+
+            do {
+
+                x = Math.random() * (window.innerWidth - no.offsetWidth - padding);
+                y = Math.random() * (window.innerHeight - no.offsetHeight - padding);
+
+            } while (
+
+                x > centerX - 180 &&
+                x < centerX + 180 &&
+                y > centerY - 180 &&
+                y < centerY + 180
+
+            );
 
             no.style.left = x + "px";
             no.style.top = y + "px";
+
+            no.style.transform = "scale(1.08)";
+
+            setTimeout(() => {
+                no.style.transform = "scale(1)";
+            }, 150);
 
             no.textContent = buttonTexts[Math.min(attempts, buttonTexts.length - 1)];
 
             attempts++;
 
-            yesScale += 0.05;
+            yesScale = Math.min(1.45, yesScale + 0.03);
             yes.style.transform = `scale(${yesScale})`;
 
             randomPopup();
@@ -367,19 +443,28 @@ to{transform:translateY(110vh) rotate(360deg);}
 
         const bg = ["🍕", "☕", "🎮", "🍟", "😎", "🎉", "✨", "🍔"];
 
+        const isMobile = window.innerWidth < 768;
+
         setInterval(() => {
 
             const e = document.createElement("div");
             e.className = "emoji";
             e.innerHTML = bg[Math.floor(Math.random() * bg.length)];
+
             e.style.left = Math.random() * 100 + "vw";
-            e.style.animationDuration = (6 + Math.random() * 5) + "s";
-            e.style.fontSize = (20 + Math.random() * 20) + "px";
+
+            e.style.animationDuration =
+                (isMobile ? 10 : 7) + Math.random() * 3 + "s";
+
+            e.style.fontSize =
+                (isMobile ? 16 : 20) + Math.random() * 10 + "px";
+
             document.body.appendChild(e);
 
-            setTimeout(() => e.remove(), 10000);
+            setTimeout(() => e.remove(), 12000);
 
-        }, 800);
+        }, isMobile ? 1800 : 800);
+
 
     </script>
 
