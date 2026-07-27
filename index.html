@@ -165,6 +165,19 @@
                 text-align: center;
             }
 
+            /* On phones, keep the No button close to YES instead of
+               sending it randomly across the whole screen. */
+            #no {
+                width: min(180px, calc(100vw - 30px));
+                max-width: calc(100vw - 30px);
+                padding: 12px 16px;
+                font-size: 15px;
+                line-height: 1.2;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                text-align: center;
+            }
+
         }
     </style>
 </head>
@@ -266,6 +279,114 @@
             }, 2500);
         }
 
+        function positionMobileNoButton() {
+
+
+            const yesRect = yes.getBoundingClientRect();
+            const noWidth = no.offsetWidth;
+            const noHeight = no.offsetHeight;
+
+            const yesCenterX = yesRect.left + yesRect.width / 2;
+            const yesCenterY = yesRect.top + yesRect.height / 2;
+
+            // Minimum distance needed so the two buttons cannot overlap.
+            const gap = 22;
+            const minRadius =
+                Math.max(yesRect.width, yesRect.height) / 2 +
+                Math.max(noWidth, noHeight) / 2 +
+                gap;
+
+            // Keep the orbit compact, but increase it when the button text grows.
+            const radius = Math.min(
+                Math.max(minRadius, 92),
+                Math.min(window.innerWidth, window.innerHeight) * 0.34
+            );
+
+            let best = null;
+
+            // Try several angles so we can find a point that fits the viewport.
+            const angles = Array.from({ length: 24 }, (_, i) =>
+                (i / 24) * Math.PI * 2
+            );
+
+            // Shuffle the angles for a less predictable movement.
+            for (let i = angles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [angles[i], angles[j]] = [angles[j], angles[i]];
+            }
+
+            for (const angle of angles) {
+
+                let x =
+                    yesCenterX +
+                    Math.cos(angle) * radius -
+                    noWidth / 2;
+
+                let y =
+                    yesCenterY +
+                    Math.sin(angle) * radius -
+                    noHeight / 2;
+
+                const screenPadding = 10;
+
+                // Keep the button fully visible.
+                x = Math.max(
+                    screenPadding,
+                    Math.min(x, window.innerWidth - noWidth - screenPadding)
+                );
+
+                y = Math.max(
+                    screenPadding,
+                    Math.min(y, window.innerHeight - noHeight - screenPadding)
+                );
+
+                // Check the final clamped position against YES.
+                const noCenterX = x + noWidth / 2;
+                const noCenterY = y + noHeight / 2;
+
+                const dx = noCenterX - yesCenterX;
+                const dy = noCenterY - yesCenterY;
+
+                // Elliptical collision check using both button sizes.
+                const safeX =
+                    (yesRect.width + noWidth) / 2 + gap;
+                const safeY =
+                    (yesRect.height + noHeight) / 2 + gap;
+
+                const safelyOutsideYes =
+                    (dx * dx) / (safeX * safeX) +
+                    (dy * dy) / (safeY * safeY) >= 1;
+
+                if (safelyOutsideYes) {
+                    best = { x, y };
+                    break;
+                }
+            }
+
+            // Fallback: place it to the side of YES, still outside it.
+            if (!best) {
+                best = {
+                    x: Math.max(
+                        10,
+                        Math.min(
+                            yesRect.right + gap,
+                            window.innerWidth - noWidth - 10
+                        )
+                    ),
+                    y: Math.max(
+                        10,
+                        Math.min(
+                            yesCenterY - noHeight / 2,
+                            window.innerHeight - noHeight - 10
+                        )
+                    )
+                };
+            }
+
+            no.style.left = best.x + "px";
+            no.style.top = best.y + "px";
+        }
+
         function moveButton() {
 
             if (attempts == 15) {
@@ -273,29 +394,55 @@
                 return;
             }
 
-            const padding = 20;
+            const isMobile = window.innerWidth <= 768;
 
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
+            // Update the label and YES size BEFORE calculating the new
+            // position, so the collision/spacing logic uses their real sizes.
+            no.textContent =
+                buttonTexts[Math.min(attempts, buttonTexts.length - 1)];
 
-            let x, y;
+            attempts++;
 
-            do {
+            yesScale = Math.min(1.45, yesScale + 0.03);
+            yes.style.transform = `scale(${yesScale})`;
 
-                x = Math.random() * (window.innerWidth - no.offsetWidth - padding);
-                y = Math.random() * (window.innerHeight - no.offsetHeight - padding);
+            /*
+             * MOBILE:
+             * Keep the No button orbiting around YES.
+             * We deliberately calculate a ring outside YES's bounding box,
+             * then pick a point on that ring that still fits on screen.
+             */
+            if (isMobile) {
+                positionMobileNoButton();
 
-            } while (
+            } else {
 
-                x > centerX - 180 &&
-                x < centerX + 180 &&
-                y > centerY - 180 &&
-                y < centerY + 180
+                // DESKTOP: preserve the original free-moving behaviour.
+                const padding = 20;
 
-            );
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
 
-            no.style.left = x + "px";
-            no.style.top = y + "px";
+                let x, y;
+
+                do {
+
+                    x = Math.random() *
+                        (window.innerWidth - no.offsetWidth - padding);
+
+                    y = Math.random() *
+                        (window.innerHeight - no.offsetHeight - padding);
+
+                } while (
+                    x > centerX - 180 &&
+                    x < centerX + 180 &&
+                    y > centerY - 180 &&
+                    y < centerY + 180
+                );
+
+                no.style.left = x + "px";
+                no.style.top = y + "px";
+            }
 
             no.style.transform = "scale(1.08)";
 
@@ -303,19 +450,11 @@
                 no.style.transform = "scale(1)";
             }, 150);
 
-            no.textContent = buttonTexts[Math.min(attempts, buttonTexts.length - 1)];
-
-            attempts++;
-
-            yesScale = Math.min(1.45, yesScale + 0.03);
-            yes.style.transform = `scale(${yesScale})`;
-
             randomPopup();
 
             if (achievements[attempts]) {
                 showAchievement(achievements[attempts]);
             }
-
         }
 
         function fakeVictory() {
@@ -329,16 +468,21 @@
 
                 popup.innerHTML = "😂 Just kidding... Round 2!";
 
-                const x = Math.random() * (window.innerWidth - no.offsetWidth);
-                const y = Math.random() * (window.innerHeight - no.offsetHeight);
-
-                no.style.left = x + "px";
-                no.style.top = y + "px";
-
                 attempts = 0;
                 yesScale = 1;
                 yes.style.transform = "scale(1)";
                 no.textContent = "No 😐";
+
+                // Reposition using the mobile orbit logic (without counting
+                // this reset as another attempt).
+                if (window.innerWidth <= 768) {
+                    positionMobileNoButton();
+                } else {
+                    const x = Math.random() * (window.innerWidth - no.offsetWidth);
+                    const y = Math.random() * (window.innerHeight - no.offsetHeight);
+                    no.style.left = x + "px";
+                    no.style.top = y + "px";
+                }
 
                 setTimeout(() => {
                     popup.style.opacity = 0;
@@ -439,7 +583,18 @@ to{transform:translateY(110vh) rotate(360deg);}
 
         };
 
-        moveButton();
+        // Initial placement: put No beside YES on phones.
+        if (window.innerWidth <= 768) {
+            positionMobileNoButton();
+        } else {
+            moveButton();
+        }
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth <= 768) {
+                positionMobileNoButton();
+            }
+        });
 
         const bg = ["🍕", "☕", "🎮", "🍟", "😎", "🎉", "✨", "🍔"];
 
