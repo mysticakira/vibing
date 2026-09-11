@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEER, BLACKJACK & BARELY WORKING</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #fff7df;
+            --ink: #181512;
+            --coral: #ff5c5c;
+            --orange: #ff9f1c;
+            --yellow: #ffe45e;
+            --turquoise: #48d8c4;
+            --blue: #4e7cff;
+            --pink: #ff9fcf;
+            --green: #9be564;
+            --white: #fffdf5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 10% 15%, rgba(255, 228, 94, .5) 0 2px, transparent 3px),
+                radial-gradient(circle at 80% 40%, rgba(72, 216, 196, .35) 0 2px, transparent 3px),
+                var(--cream);
+            background-size: 28px 28px, 34px 34px;
+            color: var(--ink);
+            font-family: "DM Mono", monospace;
+            overflow-x: hidden;
+        }
+
+        /* subtle paper grain */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: .09;
+            z-index: 20;
+            background-image:
+                repeating-radial-gradient(circle at 0 0,
+                    #000 0,
+                    #000 1px,
+                    transparent 1px,
+                    transparent 4px);
+            background-size: 7px 7px;
+            mix-blend-mode: multiply;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 32px));
+            margin: auto;
+            padding: 45px 0 90px;
+            position: relative;
+        }
+
+        /* ---------------- HERO ---------------- */
+
+        header {
+            position: relative;
+            text-align: center;
+            margin-bottom: 75px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            background: var(--ink);
+            color: var(--yellow);
+            padding: 8px 15px;
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            transform: rotate(-2deg);
+            box-shadow: 5px 5px 0 var(--coral);
+            margin-bottom: 22px;
+        }
+
+        header h1 {
+            position: relative;
+            display: inline-block;
+            margin: 0;
+            padding: 18px 28px 14px;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(4rem, 11vw, 7.8rem);
+            line-height: .82;
+            letter-spacing: 2px;
+            color: var(--cream);
+            background: var(--coral);
+            border: 5px solid var(--ink);
+            transform: rotate(-2deg);
+            box-shadow: 11px 11px 0 var(--ink);
+            text-shadow: 4px 4px 0 var(--ink);
+        }
+
+        header h1::after {
+            content: "NO REFUNDS";
+            position: absolute;
+            right: -45px;
+            bottom: -28px;
+            background: var(--yellow);
+            color: var(--ink);
+            font-family: "DM Mono", monospace;
+            font-size: .7rem;
+            letter-spacing: 1px;
+            padding: 9px 12px;
+            border: 3px solid var(--ink);
+            box-shadow: 4px 4px 0 var(--ink);
+            transform: rotate(7deg);
+            text-shadow: none;
+        }
+
+        .sub-sticker {
+            position: absolute;
+            right: 0;
+            top: -5px;
+            background: var(--turquoise);
+            border: 3px solid var(--ink);
+            padding: 10px 14px;
+            font-size: .72rem;
+            font-weight: bold;
+            box-shadow: 5px 5px 0 var(--ink);
+            transform: rotate(5deg);
+            z-index: 3;
+        }
+
+        .sub-sticker::before {
+            content: "●";
+            color: #e62929;
+            margin-right: 6px;
+            animation: blink 1s infinite;
+        }
+
+        /* ---------------- DOODLE STAGE ---------------- */
+
+        .tropical-stage {
+            position: relative;
+            height: 155px;
+            margin-bottom: 60px;
+            border-top: 3px dashed var(--ink);
+            border-bottom: 3px dashed var(--ink);
+            transform: rotate(.5deg);
+        }
+
+        .palm-island {
+            position: absolute;
+            left: 4%;
+            bottom: 18px;
+            width: 85px;
+            height: 85px;
+            border: 4px solid var(--ink);
+            border-radius: 50%;
+            background: var(--green);
+            display: grid;
+            place-items: center;
+            font-size: 2.7rem;
+            box-shadow: 7px 7px 0 var(--ink);
+            transform: rotate(-8deg);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-drink {
+            position: absolute;
+            left: 50%;
+            top: 25px;
+            width: 60px;
+            height: 90px;
+            transform: translateX(-50%);
+            animation: cocktail 2.2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .glass-body {
+            width: 0;
+            height: 0;
+            border-left: 28px solid transparent;
+            border-right: 28px solid transparent;
+            border-top: 40px solid var(--coral);
+            position: relative;
+            filter: drop-shadow(3px 3px 0 var(--ink));
+        }
+
+        .glass-body::before {
+            content: "🍋‍🟩";
+            position: absolute;
+            top: -42px;
+            left: -14px;
+            font-size: 25px;
+            transform: rotate(-20deg);
+        }
+
+        .glass-stem {
+            width: 5px;
+            height: 27px;
+            background: var(--ink);
+            margin: 0 auto;
+        }
+
+        .glass-base {
+            width: 38px;
+            height: 6px;
+            background: var(--ink);
+            border-radius: 5px;
+            margin: 0 auto;
+        }
+
+        .floating-die {
+            position: absolute;
+            right: 5%;
+            bottom: 25px;
+            width: 62px;
+            height: 62px;
+            background: var(--yellow);
+            border: 4px solid var(--ink);
+            border-radius: 12px;
+            box-shadow: 7px 7px 0 var(--ink);
+            animation: dice 3s ease-in-out infinite;
+        }
+
+        .die-dot {
+            position: absolute;
+            width: 9px;
+            height: 9px;
+            background: var(--ink);
+            border-radius: 50%;
+        }
+
+        .die-dot.tl {
+            top: 10px;
+            left: 10px;
+        }
+
+        .die-dot.tr {
+            top: 10px;
+            right: 10px;
+        }
+
+        .die-dot.c {
+            top: 25px;
+            left: 25px;
+        }
+
+        .die-dot.bl {
+            bottom: 10px;
+            left: 10px;
+        }
+
+        .die-dot.br {
+            bottom: 10px;
+            right: 10px;
+        }
+
+        /* ---------------- STORYLINE ---------------- */
+
+        .storyline {
+            position: relative;
+        }
+
+        .storyline::before {
+            content: "";
+            position: absolute;
+            left: 27px;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--ink);
+            transform: rotate(1deg);
+        }
+
+        .moment {
+            position: relative;
+            padding-left: 75px;
+            margin-bottom: 75px;
+        }
+
+        .moment::before {
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 5px;
+            width: 55px;
+            height: 55px;
+            display: grid;
+            place-items: center;
+            border: 4px solid var(--ink);
+            border-radius: 50%;
+            background: var(--yellow);
+            font-size: 1.55rem;
+            z-index: 2;
+            box-shadow: 4px 4px 0 var(--ink);
+        }
+
+        .moment.morning::before {
+            content: "☀️";
+            background: var(--yellow);
+        }
+
+        .moment.grind::before {
+            content: "💻";
+            background: var(--pink);
+        }
+
+        .moment.sunset::before {
+            content: "🍹";
+            background: var(--coral);
+        }
+
+        .moment.casino::before {
+            content: "🎲";
+            background: var(--turquoise);
+        }
+
+        .time-banner {
+            display: inline-block;
+            padding: 7px 11px;
+            margin-bottom: 12px;
+            background: var(--ink);
+            color: var(--cream);
+            border: 2px solid var(--ink);
+            font-size: .7rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 4px 4px 0 var(--orange);
+            transform: rotate(-1deg);
+        }
+
+        .moment h2 {
+            margin: 0 0 15px;
+            font-family: "Bebas Neue", sans-serif;
+            font-size: clamp(2.1rem, 6vw, 3.2rem);
+            line-height: .95;
+            letter-spacing: 1px;
+        }
+
+        .moment p {
+            position: relative;
+            margin: 0;
+            padding: 24px 25px;
+            background: var(--white);
+            border: 4px solid var(--ink);
+            box-shadow: 7px 7px 0 var(--ink);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1rem;
+            line-height: 1.65;
+            transition: .25s ease;
+        }
+
+        .moment:nth-child(odd) p {
+            transform: rotate(.6deg);
+        }
+
+        .moment:nth-child(even) p {
+            transform: rotate(-.6deg);
+        }
+
+        .moment p::before {
+            content: "✦";
+            position: absolute;
+            right: 13px;
+            top: 8px;
+            font-size: 1.2rem;
+        }
+
+        .moment p:hover {
+            transform: translate(-3px, -5px) rotate(0deg);
+            box-shadow: 11px 11px 0 var(--ink);
+        }
+
+        .moment.morning p {
+            border-color: var(--ink);
+            background: #fffdf1;
+        }
+
+        .moment.grind p {
+            background: #ffeef5;
+        }
+
+        .moment.sunset p {
+            background: #fff1e5;
+        }
+
+        .moment.casino p {
+            background: #e9fffa;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+
+        .footer-card {
+            margin-top: 20px;
+            padding: 25px;
+            background: var(--ink);
+            color: var(--cream);
+            border: 4px solid var(--ink);
+            box-shadow: 9px 9px 0 var(--coral);
+            text-align: center;
+            transform: rotate(-1deg);
+        }
+
+        .footer-card strong {
+            display: block;
+            font-family: "Bebas Neue", sans-serif;
+            color: var(--yellow);
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+
+        .footer-card span {
+            font-size: .72rem;
+            opacity: .75;
+        }
+
+        /* ---------------- ANIMATIONS ---------------- */
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-8deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(5deg);
+            }
+        }
+
+        @keyframes cocktail {
+
+            0%,
+            100% {
+                transform: translateX(-50%) rotate(-8deg) translateY(0);
+            }
+
+            50% {
+                transform: translateX(-50%) rotate(8deg) translateY(-12px);
+            }
+        }
+
+        @keyframes dice {
+
+            0%,
+            100% {
+                transform: rotate(-7deg) translateY(0);
+            }
+
+            50% {
+                transform: rotate(7deg) translateY(-12px);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            45% {
+                opacity: 1;
+            }
+
+            46%,
+            100% {
+                opacity: .25;
+            }
+        }
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 650px) {
+            .container {
+                width: min(100% - 22px, 900px);
+                padding-top: 30px;
+            }
+
+            header {
+                margin-bottom: 60px;
+            }
+
+            .sub-sticker {
+                right: 5px;
+                top: -22px;
+                font-size: .6rem;
+            }
+
+            header h1 {
+                font-size: clamp(3.4rem, 16vw, 5.5rem);
+                padding: 15px 18px 12px;
+                box-shadow: 7px 7px 0 var(--ink);
+            }
+
+            header h1::after {
+                right: -12px;
+                bottom: -35px;
+            }
+
+            .tropical-stage {
+                height: 125px;
+            }
+
+            .palm-island {
+                width: 62px;
+                height: 62px;
+                font-size: 1.8rem;
+                left: 0;
+            }
+
+            .floating-die {
+                width: 48px;
+                height: 48px;
+                right: 0;
+            }
+
+            .die-dot {
+                width: 7px;
+                height: 7px;
+            }
+
+            .die-dot.tl {
+                top: 7px;
+                left: 7px;
+            }
+
+            .die-dot.tr {
+                top: 7px;
+                right: 7px;
+            }
+
+            .die-dot.c {
+                top: 18px;
+                left: 18px;
+            }
+
+            .die-dot.bl {
+                bottom: 7px;
+                left: 7px;
+            }
+
+            .die-dot.br {
+                bottom: 7px;
+                right: 7px;
+            }
+
+            .floating-die::after {
+                display: none;
+            }
+
+            .storyline::before {
+                left: 21px;
+            }
+
+            .moment {
+                padding-left: 58px;
+                margin-bottom: 60px;
+            }
+
+            .moment::before {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+                border-width: 3px;
+                box-shadow: 3px 3px 0 var(--ink);
+            }
+
+            .moment h2 {
+                font-size: 2.2rem;
+            }
+
+            .moment p {
+                padding: 19px;
+                font-size: .94rem;
+                line-height: 1.6;
+                box-shadow: 5px 5px 0 var(--ink);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="eyebrow">☀ GOA • OUT OF OFFICE • ZERO REGRETS ☀</div>
+
+            <div class="sub-sticker">
+                Go Live: 13/09/2026
+            </div>
+
+            <h1>
+                BEER, BLACKJACK<br>
+                &amp; BARELY WORKING
+            </h1>
+        </header>
+
+        <div class="tropical-stage">
+
+            <div class="palm-island">
+                🌴
+            </div>
+
+            <div class="floating-drink">
+                <div class="glass-body"></div>
+                <div class="glass-stem"></div>
+                <div class="glass-base"></div>
+            </div>
+
+            <div class="floating-die">
+                <div class="die-dot tl"></div>
+                <div class="die-dot tr"></div>
+                <div class="die-dot c"></div>
+                <div class="die-dot bl"></div>
+                <div class="die-dot br"></div>
+            </div>
+
+        </div>
+
+        <main class="storyline">
+
+            <section class="moment morning">
+
+                <div class="time-banner">
+                    AM • OBLIVIOUS BLISS
+                </div>
+
+                <h2>
+                    The Rise &amp; Poolside Laze
+                </h2>
+
+                <p>
+                    Wake up with a blissful lack of accountability.
+                    Convince yourself you're getting an early start while
+                    actually spending the morning floating aimlessly in the
+                    pool, acquiring a baseline tan before the corporate world
+                    remembers you exist.
+                </p>
+
+            </section>
+
+            <section class="moment grind">
+
+                <div class="time-banner">
+                    12:00 — 16:00 • CORPORATE PENANCE
+                </div>
+
+                <h2>
+                    The Mid-Day Lockdown
+                </h2>
+
+                <p>
+                    Open the laptop and pretend you're a functioning member
+                    of society for exactly four hours. Brutally ignore the
+                    sound of waves, aggressively smash your keyboard to clear
+                    your deliverables, and try not to spill beer on your
+                    laptop so you can vanish before your manager questions
+                    your location settings.
+                </p>
+
+            </section>
+
+            <section class="moment sunset">
+
+                <div class="time-banner">
+                    16:00 — 20:00 • LIQUID GOLD HOUR
+                </div>
+
+                <h2>
+                    Shack Chilling &amp; Sundowners
+                </h2>
+
+                <p>
+                    Slam the screen down at 4:00 PM with zero remorse.
+                    Sprint straight to the closest beach shack, plant your
+                    feet firmly in the sand, and aggressively treat your work
+                    trauma with cold cocktails while watching the sun drown
+                    in the sea.
+                </p>
+
+            </section>
+
+            <section class="moment casino">
+
+                <div class="time-banner">
+                    20:00 — WAY PAST MIDNIGHT • MATH &amp; POOR DECISIONS
+                </div>
+
+                <h2>
+                    Deltin Casino Floor Takeover
+                </h2>
+
+                <p>
+                    Ditch the sandy board shorts, throw on a fresh outfit,
+                    and head out to the high-energy gaming floors at Deltin.
+                    Spend the night deploying highly flawed mathematical
+                    strategies at the blackjack tables, testing your luck on
+                    the roulette wheel, and staying up way past midnight to
+                    aggressively double down on questionable life choices.
+                </p>
+
+            </section>
+
+        </main>
+
+        <div class="footer-card">
+            <strong>OUT OF OFFICE. OUT OF POCKET.</strong>
+            <span>IF FOUND, RETURN TO THE NEAREST BEACH SHACK.</span>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
+```
