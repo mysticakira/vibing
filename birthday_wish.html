@@ -1953,65 +1953,6 @@
 
 
             <!-- =========================================================
-     JANUARY 2025 — RELIGIOUS GURU ERA
-========================================================= -->
-
-            <article class="event reveal">
-
-                <span class="event-date">
-                    January 2025
-                </span>
-
-                <h2>
-                    The Religious Guru
-                    <em>Era.</em>
-                </h2>
-
-                <p>
-                    I decided to become a religious guru
-                    and finally share my postponed explanation
-                    of what religion means to me.
-                </p>
-
-                <p>
-                    “Finally” is doing some extremely generous
-                    work in that sentence.
-                </p>
-
-                <div class="artifact">
-
-                    <span class="artifact-label">
-                        Guru certification board
-                    </span>
-
-                    <strong>
-                        Select your level of seriousness:
-                    </strong>
-
-                    <div class="button-row">
-
-                        <button class="interaction-button" onclick="guruLevel('simple')">
-                            Simple explanation
-                        </button>
-
-                        <button class="interaction-button" onclick="guruLevel('deep')">
-                            Deep explanation
-                        </button>
-
-                        <button class="interaction-button" onclick="guruLevel('thesis')">
-                            Full thesis
-                        </button>
-
-                    </div>
-
-                    <div id="guru-answer" class="reveal-answer"></div>
-
-                </div>
-
-            </article>
-
-
-            <!-- =========================================================
      LETTER DROUGHT
 ========================================================= -->
 
@@ -2588,7 +2529,13 @@
 
         </div>
 
+        <div class="scroll-hint">
+            <span>Keep going...</span>
+            <span class="scroll-arrow">↓</span>
+        </div>
+
     </main>
+
 
 
     <!-- =========================================================
@@ -3187,43 +3134,6 @@
                 );
 
             }, 900);
-
-        }
-
-
-        /* =========================================================
-           17. GURU LEVEL
-        ========================================================= */
-
-        function guruLevel(choice) {
-
-            let message = "";
-
-            if (choice === "simple") {
-
-                message =
-                    "A surprisingly reasonable choice.";
-
-            }
-
-            if (choice === "deep") {
-
-                message =
-                    "Now we're getting somewhere.";
-
-            }
-
-            if (choice === "thesis") {
-
-                message =
-                    "Excellent. Please prepare the bibliography.";
-
-            }
-
-            showAnswer(
-                "guru-answer",
-                message
-            );
 
         }
 
