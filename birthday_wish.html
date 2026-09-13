@@ -1,0 +1,3545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>A Brief History of You</title>
+
+    <style>
+        /* =========================================================
+   01. ROOT / COLOURS
+========================================================= */
+
+        :root {
+            --paper: #f8f1e6;
+            --paper-light: #fffaf2;
+            --paper-dark: #eee1ce;
+
+            --ink: #29332f;
+            --ink-soft: #53605a;
+            --muted: #858d87;
+
+            --ocean: #4d8490;
+            --ocean-dark: #285762;
+
+            --sun: #e9b84d;
+            --sun-soft: #f4d98d;
+
+            --rose: #c87972;
+            --rose-soft: #e8c2bd;
+
+            --lavender: #8176a5;
+            --raven: #33285c;
+
+            --gold: #c49527;
+
+            --shadow:
+                0 20px 60px rgba(41, 51, 47, 0.10);
+
+            --radius: 4px;
+        }
+
+
+        /* =========================================================
+   02. RESET
+========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 15% 10%,
+                    rgba(233, 184, 77, .13),
+                    transparent 25%),
+                radial-gradient(circle at 90% 35%,
+                    rgba(77, 132, 144, .12),
+                    transparent 28%),
+                var(--paper);
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+
+        /* =========================================================
+   03. PAPER TEXTURE
+========================================================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            opacity: .13;
+
+            background-image:
+                radial-gradient(#4c493f 0.5px,
+                    transparent 0.5px);
+
+            background-size: 7px 7px;
+
+            z-index: 100;
+
+            mix-blend-mode: multiply;
+        }
+
+
+        /* =========================================================
+   04. GENERAL
+========================================================= */
+
+        .container {
+            width: min(900px, calc(100% - 36px));
+            margin: auto;
+        }
+
+        .section {
+            position: relative;
+        }
+
+        .eyebrow {
+            text-transform: uppercase;
+
+            letter-spacing: .22em;
+
+            font-size: .7rem;
+
+            color: var(--ocean-dark);
+        }
+
+        .small-note {
+            font-size: .78rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+
+        /* =========================================================
+   05. HERO
+========================================================= */
+
+        .hero {
+            min-height: 100svh;
+
+            display: grid;
+            place-items: center;
+
+            position: relative;
+
+            padding: 70px 20px 100px;
+
+            text-align: center;
+
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+
+            max-width: 720px;
+        }
+
+        .hero h1 {
+            margin: 22px 0 0;
+
+            font-size:
+                clamp(3.2rem, 10vw, 7rem);
+
+            line-height: .9;
+
+            font-weight: 400;
+
+            letter-spacing: -.055em;
+        }
+
+        .hero h1 span {
+            color: var(--ocean);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            max-width: 580px;
+
+            margin: 30px auto 34px;
+
+            color: var(--ink-soft);
+
+            font-size:
+                clamp(1rem, 2.5vw, 1.2rem);
+        }
+
+        .begin-button {
+            border: 1px solid var(--ink);
+
+            background: transparent;
+
+            color: var(--ink);
+
+            border-radius: 999px;
+
+            padding: 12px 24px;
+
+            cursor: pointer;
+
+            transition:
+                background .25s ease,
+                color .25s ease,
+                transform .25s ease;
+        }
+
+        .begin-button:hover {
+            background: var(--ink);
+            color: var(--paper);
+
+            transform: translateY(-2px);
+        }
+
+        .hero-note {
+            margin-top: 16px;
+
+            font-size: .75rem;
+
+            color: var(--muted);
+
+            font-style: italic;
+        }
+
+
+        /* =========================================================
+   06. FLOATING HERO DECORATIONS
+========================================================= */
+
+        .floating {
+            position: absolute;
+
+            user-select: none;
+
+            pointer-events: none;
+
+            opacity: .45;
+
+            animation:
+                float 6s ease-in-out infinite;
+        }
+
+        .cat {
+            font-size: 2rem;
+        }
+
+        .cat.one {
+            left: 7%;
+            top: 22%;
+        }
+
+        .cat.two {
+            right: 8%;
+            bottom: 24%;
+
+            animation-delay: -2s;
+        }
+
+        .wave-symbol {
+            color: var(--ocean);
+            font-size: 3rem;
+        }
+
+        .wave.one {
+            left: 12%;
+            bottom: 12%;
+        }
+
+        .wave.two {
+            right: 12%;
+            top: 18%;
+
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform:
+                    translateY(0) rotate(-3deg);
+            }
+
+            50% {
+                transform:
+                    translateY(-14px) rotate(3deg);
+            }
+        }
+
+        .scroll-hint {
+            position: absolute;
+
+            bottom: 28px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            font-size: .68rem;
+
+            letter-spacing: .16em;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+        }
+
+
+        /* =========================================================
+   07. INTRO
+========================================================= */
+
+        .intro {
+            padding: 30px 0 110px;
+        }
+
+        .intro-card {
+            max-width: 670px;
+
+            margin: auto;
+
+            padding: 50px 30px;
+
+            text-align: center;
+
+            background:
+                rgba(255, 250, 242, .72);
+
+            border:
+                1px solid rgba(41, 51, 47, .08);
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .intro-card p {
+            margin: 0 0 16px;
+        }
+
+        .intro-card p:last-child {
+            margin-bottom: 0;
+        }
+
+
+        /* =========================================================
+   08. TIMELINE
+========================================================= */
+
+        .timeline {
+            position: relative;
+
+            padding: 20px 0 100px;
+        }
+
+        .timeline::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            bottom: 40px;
+
+            left: 50%;
+
+            width: 1px;
+
+            background:
+                linear-gradient(to bottom,
+                    transparent,
+                    rgba(77, 132, 144, .42) 5%,
+                    rgba(77, 132, 144, .42) 95%,
+                    transparent);
+        }
+
+
+        /* =========================================================
+   09. TIMELINE EVENT
+========================================================= */
+
+        .event {
+            width: 50%;
+
+            position: relative;
+
+            padding:
+                25px 50px 75px;
+        }
+
+        .event:nth-child(odd) {
+            margin-right: auto;
+
+            text-align: right;
+        }
+
+        .event:nth-child(even) {
+            margin-left: 50%;
+        }
+
+
+        /* Timeline dot */
+
+        .event::after {
+            content: "";
+
+            position: absolute;
+
+            top: 34px;
+
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            background: var(--paper);
+
+            border:
+                2px solid var(--ocean);
+
+            z-index: 3;
+        }
+
+        .event:nth-child(odd)::after {
+            right: -7px;
+        }
+
+        .event:nth-child(even)::after {
+            left: -7px;
+        }
+
+
+        /* =========================================================
+   10. EVENT TYPOGRAPHY
+========================================================= */
+
+        .event-date {
+            display: inline-block;
+
+            color: var(--ocean-dark);
+
+            font-size: .68rem;
+
+            letter-spacing: .2em;
+
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
+        }
+
+        .event h2 {
+            margin: 0 0 17px;
+
+            font-size:
+                clamp(1.55rem, 3vw, 2.25rem);
+
+            line-height: 1.05;
+
+            font-weight: 400;
+
+            letter-spacing: -.025em;
+        }
+
+        .event h2 em {
+            color: var(--rose);
+
+            font-style: italic;
+        }
+
+        .event p {
+            margin:
+                0 0 13px;
+
+            color: var(--ink-soft);
+        }
+
+        .event strong {
+            color: var(--ink);
+        }
+
+
+        /* =========================================================
+   11. ARTIFACT / INTERACTION CARD
+========================================================= */
+
+        .artifact {
+            position: relative;
+
+            margin-top: 23px;
+
+            padding: 18px;
+
+            background:
+                rgba(255, 250, 242, .8);
+
+            border:
+                1px dashed rgba(41, 51, 47, .2);
+
+            font-size: .88rem;
+
+            text-align: left;
+
+            transition:
+                transform .25s ease,
+                background .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .event:nth-child(odd) .artifact {
+            text-align: right;
+        }
+
+        .artifact:hover {
+            transform: translateY(-2px);
+
+            background:
+                rgba(255, 250, 242, .95);
+
+            box-shadow:
+                0 10px 30px rgba(41, 51, 47, .06);
+        }
+
+        .artifact-label {
+            display: block;
+
+            font-size: .63rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: .16em;
+
+            color: var(--muted);
+
+            margin-bottom: 7px;
+        }
+
+
+        /* =========================================================
+   12. INTERACTION BUTTONS
+========================================================= */
+
+        .interaction-button {
+            border:
+                1px solid #a8aaa0;
+
+            background: transparent;
+
+            color: var(--ink);
+
+            padding: 7px 12px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: .76rem;
+
+            transition:
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease;
+        }
+
+        .interaction-button:hover {
+            background: var(--ink);
+
+            color: var(--paper);
+
+            transform: translateY(-1px);
+        }
+
+        .button-row {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+
+            margin-top: 12px;
+        }
+
+        .event:nth-child(odd) .button-row {
+            justify-content: flex-end;
+        }
+
+
+        /* =========================================================
+   13. REVEAL TEXT
+========================================================= */
+
+        .reveal-answer {
+            min-height: 24px;
+
+            margin-top: 14px;
+
+            color: var(--rose);
+
+            font-style: italic;
+
+            transition:
+                opacity .3s ease;
+        }
+
+
+        /* =========================================================
+   14. SPECIAL COLOURS
+========================================================= */
+
+        .ravenclaw-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-top: 12px;
+
+            padding: 6px 11px;
+
+            border-radius: 999px;
+
+            background: var(--raven);
+
+            color: #f2c85b;
+
+            font-size: .7rem;
+        }
+
+        .gold {
+            color: var(--gold);
+        }
+
+        .ocean {
+            color: var(--ocean);
+        }
+
+        .rose {
+            color: var(--rose);
+        }
+
+
+        /* =========================================================
+   15. SCROLL REVEAL
+========================================================= */
+
+        .reveal {
+            opacity: 0;
+
+            transform:
+                translateY(30px);
+
+            transition:
+                opacity .8s ease,
+                transform .8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================================
+   16. FINAL SECTION
+========================================================= */
+
+        .final {
+            min-height: 100svh;
+
+            display: grid;
+
+            place-items: center;
+
+            position: relative;
+
+            overflow: hidden;
+
+            padding:
+                100px 0;
+        }
+
+        .final-inner {
+            max-width: 700px;
+
+            position: relative;
+
+            z-index: 2;
+
+            text-align: center;
+        }
+
+        .final h2 {
+            margin:
+                20px 0 35px;
+
+            font-size:
+                clamp(2.7rem, 8vw, 5.8rem);
+
+            line-height: .94;
+
+            font-weight: 400;
+
+            letter-spacing: -.05em;
+        }
+
+        .final h2 em {
+            color: var(--ocean);
+
+            font-style: italic;
+        }
+
+        .final p {
+            max-width: 580px;
+
+            margin:
+                0 auto 16px;
+
+            color: var(--ink-soft);
+        }
+
+        .birthday {
+            margin-top: 42px;
+
+            font-size:
+                clamp(1.6rem, 4vw, 2.5rem);
+
+            color: var(--rose);
+        }
+
+        .final-note {
+            margin-top: 35px;
+
+            font-size: .78rem;
+
+            color: var(--muted);
+
+            font-style: italic;
+        }
+
+
+        /* =========================================================
+   17. FOOTER
+========================================================= */
+
+        footer {
+            padding:
+                20px 20px 50px;
+
+            text-align: center;
+
+            color: #929791;
+
+            font-size: .7rem;
+        }
+
+
+        /* =========================================================
+   18. MOBILE
+========================================================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width:
+                    min(100% - 28px,
+                        600px);
+            }
+
+            .hero {
+                padding:
+                    50px 18px 90px;
+            }
+
+            .floating {
+                opacity: .28;
+            }
+
+            .cat.one {
+                left: 2%;
+            }
+
+            .cat.two {
+                right: 2%;
+            }
+
+            /* Move timeline line to the left */
+
+            .timeline::before {
+                left: 14px;
+            }
+
+            .event,
+            .event:nth-child(odd),
+            .event:nth-child(even) {
+
+                width: 100%;
+
+                margin: 0;
+
+                padding:
+                    25px 5px 65px 45px;
+
+                text-align: left;
+            }
+
+            .event::after,
+            .event:nth-child(odd)::after,
+            .event:nth-child(even)::after {
+
+                left: 9px;
+
+                right: auto;
+            }
+
+            .event:nth-child(odd) .artifact {
+                text-align: left;
+            }
+
+            .event:nth-child(odd) .button-row {
+                justify-content: center;
+            }
+
+            .intro-card {
+                padding:
+                    38px 22px;
+            }
+
+            .final {
+                padding:
+                    90px 0;
+            }
+        }
+
+
+        /* =========================================================
+   19. REDUCED MOTION
+========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                scroll-behavior:
+                    auto !important;
+
+                transition-duration:
+                    .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+     HERO
+========================================================= -->
+
+    <header class="hero">
+
+        <div class="floating cat one">🐈</div>
+
+        <div class="floating cat two">🐈</div>
+
+        <div class="floating wave-symbol wave one">〰</div>
+
+        <div class="floating wave-symbol wave two">〰</div>
+
+
+        <div class="hero-inner">
+
+            <div class="eyebrow">
+                An unnecessarily elaborate birthday archive
+            </div>
+
+
+            <h1>
+                A Brief History<br>
+                of <span>You.</span>
+            </h1>
+
+
+            <p class="hero-subtitle">
+                There are people you meet.<br>
+                And then there are people who somehow become part of the story.
+            </p>
+
+
+            <button class="begin-button" onclick="document
+        .getElementById('story')
+        .scrollIntoView({behavior:'smooth'})">
+                Begin the investigation →
+            </button>
+
+
+            <div class="hero-note">
+                Entirely objective. Peer-reviewed by absolutely nobody.
+            </div>
+
+        </div>
+
+
+        <div class="scroll-hint">
+            scroll ↓
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+     INTRO
+========================================================= -->
+
+    <section class="intro section" id="story">
+
+        <div class="container">
+
+            <div class="intro-card reveal">
+
+                <p>
+                    This is a small archive of letters,
+                    questionable decisions, books, beaches,
+                    cats, art, a couple of meetups, plenty of whatsapp conversations...
+                </p>
+
+                <p>
+                    ...and one person who has repeatedly
+                    made me run out of words.
+                </p>
+
+                <p class="small-note">
+                    Which is mildly ironic, considering
+                    how this whole thing started.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+     TIMELINE START
+     
+     SECTIONS 2, 3 AND 4 WILL GO HERE.
+========================================================= -->
+
+    <main class="timeline">
+
+        <div class="container">
+
+            <!-- =========================================================
+     SECTION 2
+     AUGUST 2024 — OCTOBER 2024
+========================================================= -->
+
+
+            <!-- =========================================================
+     AUGUST 2024 — THE FIVE DAY DELIBERATION
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    August 2024
+                </span>
+
+                <h2>
+                    Five days of
+                    <em>very serious deliberation.</em>
+                </h2>
+
+                <p>
+                    I found you on Slowly and then spent five days
+                    deciding whether I should actually write.
+                </p>
+
+                <p>
+                    Partly because you liked grammar.
+                    Partly because you seemed interested in
+                    <strong>imperfect people</strong> occupying grey areas.
+                </p>
+
+                <p>
+                    Which was mildly concerning, because I am
+                    obviously the definition of <strong>perfect</strong>.
+                    My cent percentile in grammar, however, well...
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Decision archive · Case #001
+                    </span>
+
+                    <strong>
+                        Should I send the letter?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="deliberation('yes')">
+                            Yes
+                        </button>
+
+                        <button class="interaction-button" onclick="deliberation('no')">
+                            No
+                        </button>
+
+                        <button class="interaction-button" onclick="deliberation('five')">
+                            Think for 5 days
+                        </button>
+
+                    </div>
+
+                    <div id="deliberation-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     AUGUST 2024 — MURDER MYSTERIES & LOVE
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    August 2024
+                </span>
+
+                <h2>
+                    Then I discovered
+                    <em>your bookshelf.</em>
+                </h2>
+
+                <p>
+                    A person whose comfort reads could casually
+                    switch between murder mysteries for the thrill
+                    and unrequited love for the emotional damage.
+                </p>
+
+                <p>
+                    Honestly, the range was impressive.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Reader profile
+                    </span>
+
+                    <strong>
+                        Choose the appropriate diagnosis:
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="bookDiagnosis('chaos')">
+                            Literary chaos
+                        </button>
+
+                        <button class="interaction-button" onclick="bookDiagnosis('taste')">
+                            Excellent taste
+                        </button>
+
+                        <button class="interaction-button" onclick="bookDiagnosis('both')">
+                            Both, obviously
+                        </button>
+
+                    </div>
+
+                    <div id="book-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     AUGUST 2024 — THE CATS
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    August 2024
+                </span>
+
+                <h2>
+                    Then came
+                    <em>the cats.</em>
+                </h2>
+
+                <p>
+                    I got introduced to them.
+                </p>
+
+                <p>
+                    You were surprised that I remembered their names.
+                    Which was fair.
+                </p>
+
+                <p>
+                    But sometimes you forget that I am perfect.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Memory test · Extremely difficult
+                    </span>
+
+                    <strong>
+                        How many cat names did I remember?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="catMemory(0)">
+                            0
+                        </button>
+
+                        <button class="interaction-button" onclick="catMemory(1)">
+                            1
+                        </button>
+
+                        <button class="interaction-button" onclick="catMemory('all')">
+                            All of them
+                        </button>
+
+                    </div>
+
+                    <div id="cat-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SEPTEMBER 2024 — FIRST BIRTHDAY
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    September 2024
+                </span>
+
+                <h2>
+                    Birthday wish,
+                    <em>version 1.0</em>
+                </h2>
+
+                <p>
+                    The first birthday wish was a letter.
+                </p>
+
+                <p>
+                    Written while waiting for a GitLab pipeline to finish.
+                    A very strange little moment where somehow,
+                    despite all the asynchronous everything,
+                    it felt like you were keeping me company.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Build status
+                    </span>
+
+                    <strong>
+                        Birthday message deployment
+                    </strong>
+
+                    <div style="
+        margin-top:12px;
+        height:6px;
+        background:#e6dfd3;
+        overflow:hidden;
+        border-radius:99px;
+      ">
+
+                        <div id="pipeline-bar" style="
+          width:0%;
+          height:100%;
+          background:var(--ocean);
+          transition:width 1.8s ease;
+        "></div>
+
+                    </div>
+
+                    <div id="pipeline-answer" class="reveal-answer">
+                        Pipeline waiting...
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="runPipeline()">
+                            Run pipeline
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SEPTEMBER 2024 — LINKEDIN INCIDENT
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    September 2024
+                </span>
+
+                <h2>
+                    The LinkedIn
+                    <em>incident.</em>
+                </h2>
+
+                <p>
+                    Then came the completely reasonable decision
+                    to share a letter accompanied by my LinkedIn profile.
+                </p>
+
+                <p>
+                    I maintain that this was sophisticated.
+                </p>
+
+                <p>
+                    You maintain that it was hilarious.
+                </p>
+
+                <p>
+                    At least somebody got some good laughs out of it.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Embarrassment monitoring system
+                    </span>
+
+                    <strong>
+                        Current level:
+                        <span id="embarrassment-level">
+                            0
+                        </span>/10
+                    </strong>
+
+                    <div style="
+        margin-top:12px;
+        height:8px;
+        background:#e6dfd3;
+        border-radius:99px;
+        overflow:hidden;
+      ">
+
+                        <div id="embarrassment-bar" style="
+          width:0%;
+          height:100%;
+          background:var(--rose);
+          transition:width .5s ease;
+        "></div>
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="linkedinIncident()">
+                            Recalculate
+                        </button>
+
+                    </div>
+
+                    <div id="embarrassment-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SEPTEMBER 2024 — WAVES
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    September 2024
+                </span>
+
+                <h2>
+                    Sprinklers in Pune,
+                    <em>waves back home.</em>
+                </h2>
+
+                <p>
+                    You painted a picture of enjoying the sprinklers
+                    in Pune while reminiscing about the waves back home.
+                </p>
+
+                <p>
+                    Which, in hindsight, was probably the first clue
+                    that the ocean had already secured permanent
+                    real estate in your heart.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Allegiance detector
+                    </span>
+
+                    <strong>
+                        Where does your heart belong?
+                    </strong>
+
+                    <input type="range" min="0" max="100" value="80" id="wave-slider"
+                        oninput="wavePreference(this.value)" style="
+        width:100%;
+        margin-top:15px;
+        accent-color:var(--ocean);
+      ">
+
+                    <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:.7rem;
+        color:var(--muted);
+      ">
+                        <span>💦 Pune sprinklers</span>
+                        <span>🌊 The waves</span>
+                    </div>
+
+                    <div id="wave-answer" class="reveal-answer">
+                        We already know the answer.
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SEPTEMBER 2024 — RAVENCLAW
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    September 2024
+                </span>
+
+                <h2>
+                    Officially sorted into
+                    <em>Ravenclaw.</em>
+                </h2>
+
+                <p>
+                    The Gryffindor purist sorted me into Ravenclaw.
+                </p>
+
+                <p>
+                    And, after a brief period of pretending
+                    this was not a big deal...
+                </p>
+
+                <p>
+                    I embraced it. You clearly knew me better than my Slytherin bias, and it still makes me
+                    smile...
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Hogwarts records
+                    </span>
+
+                    <strong>
+                        Was the sorting correct?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="ravenclaw('yes')">
+                            Obviously
+                        </button>
+
+                        <button class="interaction-button" onclick="ravenclaw('no')">
+                            Questionable
+                        </button>
+
+                    </div>
+
+                    <div id="ravenclaw-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     OCTOBER 2024 — GUITAR
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    October 2024
+                </span>
+
+                <h2>
+                    The first 30 seconds
+                    <em>of audio.</em>
+                </h2>
+
+                <p>
+                    You mentioned a guitar buddy.
+                </p>
+
+                <p>
+                    I responded with my first 30-second audio,
+                    primarily because I wanted to show off.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Official reason for sending the audio
+                    </span>
+
+                    <strong>
+                        Select the most believable explanation.
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="guitarReason('music')">
+                            Artistic expression
+                        </button>
+
+                        <button class="interaction-button" onclick="guitarReason('buddy')">
+                            Guitar bonding
+                        </button>
+
+                        <button class="interaction-button" onclick="guitarReason('showoff')">
+                            Show off
+                        </button>
+
+                    </div>
+
+                    <div id="guitar-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     OCTOBER 2024 — INSTAGRAM
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    October 2024
+                </span>
+
+                <h2>
+                    And then I got
+                    <em>your Instagram.</em>
+                </h2>
+
+                <p>
+                    I opened it.
+                </p>
+
+                <p>
+                    First thought:
+                    <strong>damn, she is pretty.</strong>
+                </p>
+
+                <p>
+                    Looked around the artworks.
+                </p>
+
+                <p>
+                    Realised how ridiculously talented
+                    and dedicated you were, which was frankly
+                    becoming a little overwhelming.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Classified information
+                    </span>
+
+                    <strong>
+                        There was a problem.
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="instagramReveal()">
+                            Reveal the problem
+                        </button>
+
+                    </div>
+
+                    <div id="instagram-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     OCTOBER 2024 — THE VOICE
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    October 2024
+                </span>
+
+                <h2>
+                    Then came the voice.
+                </h2>
+
+                <p>
+                    The first proper dose of that
+                    <em>melting chocolate voice.</em>
+                </p>
+
+                <p>
+                    And somewhere between hearing it and
+                    pretending to behave normally, my brain
+                    apparently decided:
+                </p>
+
+                <p>
+                    <strong>
+                        <em>Khuda jaane ke main fida hoon.</em>
+                    </strong>
+                </p>
+
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Audio analysis
+                    </span>
+
+                    <strong>
+                        Voice impact detected:
+                    </strong>
+
+                    <div style="
+        display:flex;
+        align-items:flex-end;
+        gap:4px;
+        height:45px;
+        margin-top:15px;
+      " id="voice-wave">
+
+                        <span style="height:20%;width:5px;background:var(--rose);"></span>
+                        <span style="height:45%;width:5px;background:var(--rose);"></span>
+                        <span style="height:70%;width:5px;background:var(--rose);"></span>
+                        <span style="height:35%;width:5px;background:var(--rose);"></span>
+                        <span style="height:90%;width:5px;background:var(--rose);"></span>
+                        <span style="height:55%;width:5px;background:var(--rose);"></span>
+                        <span style="height:80%;width:5px;background:var(--rose);"></span>
+                        <span style="height:30%;width:5px;background:var(--rose);"></span>
+                        <span style="height:65%;width:5px;background:var(--rose);"></span>
+                        <span style="height:95%;width:5px;background:var(--rose);"></span>
+                        <span style="height:40%;width:5px;background:var(--rose);"></span>
+                        <span style="height:75%;width:5px;background:var(--rose);"></span>
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="voiceAnalysis()">
+                            Analyse scientifically
+                        </button>
+
+                    </div>
+
+                    <div id="voice-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     END OF SECTION 2
+========================================================= -->
+
+
+
+            <!-- =========================================================
+     SECTION 3
+     NOVEMBER 2024 — AUGUST 2025
+========================================================= -->
+
+
+            <!-- =========================================================
+     NOVEMBER 2024 — THE PROMISE OF A MEET
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    November 2024
+                </span>
+
+                <h2>
+                    From letters to
+                    <em>“we could meet.”</em>
+                </h2>
+
+                <p>
+                    A letter dropped to suggest an actual rendezvous.
+                    A hypothetical idea became an actual possibility.
+                </p>
+
+                <p>
+                    Which was super exciting.
+                    Because apparently, after months of asynchronous
+                    letters and instant messaging, we were going to have to exist
+                    in the same physical universe.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Flight trajectory detected
+                    </span>
+
+                    <strong>
+                        Distance status:
+                    </strong>
+
+                    <div style="
+        margin-top:14px;
+        font-size:1.25rem;
+        color:var(--ocean);
+      ">
+                        ✉️ ──────────────── ✈️
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="meetingStatus()">
+                            Continue investigation
+                        </button>
+
+                    </div>
+
+                    <div id="meeting-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     NOVEMBER 2024 — PANDA
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    November 2024
+                </span>
+
+                <h2>
+                    And then you made
+                    <em>something.</em>
+                </h2>
+
+                <p>
+                    A little panda digital artwork.
+                </p>
+
+                <p>
+                    It somehow went from “nice thing you made”
+                    to becoming one of my favourite T-shirts.
+                </p>
+
+                <p>
+                    Which is a rather unfair amount of influence
+                    for one tiny panda to have.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Artifact preservation record
+                    </span>
+
+                    <strong>
+                        Panda status:
+                    </strong>
+
+                    <div style="
+        margin-top:12px;
+        font-size:2rem;
+      ">
+                        🐼
+                    </div>
+
+                    <div class="reveal-answer" style="
+        color:var(--ocean);
+      ">
+                        Still a favourite.
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     NOVEMBER 2024 — BANGALORE
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    November 2024
+                </span>
+
+                <h2>
+                    Hello, Bangalore.
+                </h2>
+
+                <p>
+                    Third Wave Coffee.
+                    An actual meeting.
+                    Two people who had previously existed
+                    mostly behind screens.
+                </p>
+
+                <p>
+                    And then you discovered something important
+                    about me:
+                </p>
+
+                <p>
+                    <strong>
+                        I have absolutely no taste in gifting books.
+                    </strong>
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Gift evaluation committee
+                    </span>
+
+                    <strong>
+                        How did the book gift perform?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="bookGift('excellent')">
+                            Literary masterpiece
+                        </button>
+
+                        <button class="interaction-button" onclick="bookGift('questionable')">
+                            Questionable
+                        </button>
+
+                        <button class="interaction-button" onclick="bookGift('please')">
+                            Please don't remind me
+                        </button>
+
+                    </div>
+
+                    <div id="book-gift-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     DECEMBER 2024 — OPENING UP
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    December 2024
+                </span>
+
+                <h2>
+                    Somewhere along the way,
+                    <em>the letters changed.</em>
+                </h2>
+
+                <p>
+                    We started sharing the stories that had shaped us.
+                </p>
+
+                <p>
+                    The experiences, people and little things
+                    that had quietly built the way we think.
+                </p>
+
+                <p>
+                    And with every story, my respect and admiration
+                    for you just kept getting bigger.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Character development
+                    </span>
+
+                    <strong>
+                        What happened here?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="respectMeter()">
+                            Check the meter
+                        </button>
+
+                    </div>
+
+                    <div style="
+        margin-top:15px;
+        height:8px;
+        background:#e6dfd3;
+        border-radius:99px;
+        overflow:hidden;
+      ">
+
+                        <div id="respect-bar" style="
+          width:0%;
+          height:100%;
+          background:var(--gold);
+          transition:width 1.4s ease;
+        "></div>
+
+                    </div>
+
+                    <div id="respect-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     DECEMBER 2024 — DICTIONARY OF LOST WORDS
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    December 2024
+                </span>
+
+                <h2>
+                    The Dictionary of Lost Words
+                </h2>
+
+                <p>
+                    One of the very few book titles I could reliably
+                    recall from your ravenous book-eating capability.
+                </p>
+
+                <p>
+                    And somehow, it felt appropriate.
+                </p>
+
+                <p>
+                    Because after talking to you for long enough,
+                    you did leave me a little...
+                </p>
+
+                <p>
+                    <em>speechless.</em>
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Linguistic incident report
+                    </span>
+
+                    <strong>
+                        Words currently available:
+                    </strong>
+
+                    <div id="word-count" style="
+        margin-top:12px;
+        font-size:2rem;
+        color:var(--ocean);
+      ">
+                        100%
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="loseWords()">
+                            Say something
+                        </button>
+
+                    </div>
+
+                    <div id="words-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     JANUARY 2025 — RELIGIOUS GURU ERA
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    January 2025
+                </span>
+
+                <h2>
+                    The Religious Guru
+                    <em>Era.</em>
+                </h2>
+
+                <p>
+                    I decided to become a religious guru
+                    and finally share my postponed explanation
+                    of what religion means to me.
+                </p>
+
+                <p>
+                    “Finally” is doing some extremely generous
+                    work in that sentence.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Guru certification board
+                    </span>
+
+                    <strong>
+                        Select your level of seriousness:
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="guruLevel('simple')">
+                            Simple explanation
+                        </button>
+
+                        <button class="interaction-button" onclick="guruLevel('deep')">
+                            Deep explanation
+                        </button>
+
+                        <button class="interaction-button" onclick="guruLevel('thesis')">
+                            Full thesis
+                        </button>
+
+                    </div>
+
+                    <div id="guru-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     LETTER DROUGHT
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    Early 2025
+                </span>
+
+                <h2>
+                    And then...
+                    <em>the letters slowed down.</em>
+                </h2>
+
+                <p>
+                    They became fewer.
+                </p>
+
+                <p>
+                    Sometimes shorter.
+                </p>
+
+                <p>
+                    Sometimes, ahem,
+                    <strong>mundane.</strong>
+                </p>
+
+                <p class="small-note">
+                    Sometimes, it's impossible to sit patiently through that two-hour delay for you to read the
+                    note.<br>
+                    Ironically, actually making a call feels even harder to pull off.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Archive investigation
+                    </span>
+
+                    <strong>
+                        What happened to the letter frequency?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="letterInvestigation()">
+                            Investigate
+                        </button>
+
+                    </div>
+
+                    <div id="letter-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     APRIL 2025 — PHONE-TASTIC SOUL
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    April 2025
+                </span>
+
+                <h2>
+                    The phone-tastic
+                    <em>soul.</em>
+                </h2>
+
+                <p>
+                    A very tech-geeky letter on phones.
+                </p>
+
+                <p>
+                    You remain, to this day,
+                    a OnePlus worshipper.
+                </p>
+
+                <p>
+                    I see you.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        OnePlus loyalty index
+                    </span>
+
+                    <strong>
+                        Attempt conversion?
+                    </strong>
+
+                    <div style="
+        margin-top:14px;
+        height:8px;
+        background:#e6dfd3;
+        border-radius:99px;
+        overflow:hidden;
+      ">
+
+                        <div id="oneplus-bar" style="
+          width:90%;
+          height:100%;
+          background:var(--ocean);
+          transition:width 1s ease;
+        "></div>
+
+                    </div>
+
+                    <div style="
+        display:flex;
+        justify-content:space-between;
+        margin-top:6px;
+        font-size:.68rem;
+        color:var(--muted);
+      ">
+
+                        <span>Almost converted</span>
+
+                        <span>OnePlus believer</span>
+
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="convertOnePlus()">
+                            Attempt conversion
+                        </button>
+
+                    </div>
+
+                    <div id="oneplus-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     AUGUST 2025 — MALAYSIA
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    August 2025
+                </span>
+
+                <h2>
+                    The Malaysia
+                    <em>saga.</em>
+                </h2>
+
+                <p>
+                    A riveting and regaling account of your trip to Malaysia.
+                </p>
+
+                <p>
+                    And then the retelling continued.
+                </p>
+
+                <p>
+                    And continued.
+                </p>
+
+                <p>
+                    For approximately three months.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Historical duration estimate
+                    </span>
+
+                    <strong>
+                        How long did the Malaysia story last?
+                    </strong>
+
+                    <input type="range" min="1" max="12" value="3" id="malaysia-slider"
+                        oninput="malaysiaDuration(this.value)" style="
+        width:100%;
+        margin-top:15px;
+        accent-color:var(--gold);
+      ">
+
+                    <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:.7rem;
+        color:var(--muted);
+      ">
+
+                        <span>1 month</span>
+
+                        <span>12 months</span>
+
+                    </div>
+
+                    <div id="malaysia-answer" class="reveal-answer">
+                        Three months sounds about right.
+                    </div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SECTION 3 END
+========================================================= -->
+
+
+
+            <!-- =========================================================
+     SECTION 4
+     SEPTEMBER 2025 — SEPTEMBER 2026
+========================================================= -->
+
+
+            <!-- =========================================================
+     SEPTEMBER 2025 — THE VIDEO CARD
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    September 2025
+                </span>
+
+                <h2>
+                    The video card
+                    <em>incident.</em>
+                </h2>
+
+                <p>
+                    I spent an entire day racing against time
+                    to make you a video card.
+                </p>
+
+                <p>
+                    This happened after I had already embarrassed
+                    myself by asking you for your clicks.
+                </p>
+
+                <p>
+                    It has clearly become a lifestyle.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Personal embarrassment database
+                    </span>
+
+                    <strong>
+                        Current embarrassment level:
+                    </strong>
+
+                    <div style="
+        margin-top:14px;
+        height:9px;
+        background:#e6dfd3;
+        border-radius:99px;
+        overflow:hidden;
+      ">
+
+                        <div id="video-embarrassment-bar" style="
+          width:0%;
+          height:100%;
+          background:var(--rose);
+          transition:width 1s ease;
+        "></div>
+
+                    </div>
+
+                    <div id="video-embarrassment-number" style="
+        margin-top:8px;
+        color:var(--rose);
+        font-size:.85rem;
+      ">
+                        0 / 10
+                    </div>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="videoEmbarrassment()">
+                            Ask for clicks again
+                        </button>
+
+                    </div>
+
+                    <div id="video-embarrassment-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     NOVEMBER 2025 — SUNFLOWER
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    November 2025
+                </span>
+
+                <h2>
+                    A sunflower,
+                    <em>from you.</em>
+                </h2>
+
+                <p>
+                    You sent me a sunflower digital artwork.
+                </p>
+
+                <p>
+                    It reminded me of the
+                    <em>Sunflower</em> song from Spider-Man.
+                </p>
+
+                <p>
+                    And somehow, it still does.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Memory preserved
+                    </span>
+
+                    <div id="sunflower" onclick="bloomSunflower()" style="
+        cursor:pointer;
+        text-align:center;
+        font-size:4rem;
+        margin:8px 0;
+        transition:
+          transform .6s ease,
+          filter .6s ease;
+      " title="Click the sunflower">
+                        🌻
+                    </div>
+
+                    <div style="
+        text-align:center;
+        color:var(--muted);
+        font-size:.7rem;
+      ">
+                        emm, click the sunflower
+                    </div>
+
+                    <div id="sunflower-answer" class="reveal-answer" style="text-align:center;"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     MARCH 2026 — TRIVANDRUM
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    March 2026
+                </span>
+
+                <h2>
+                    Jet-setting to
+                    <em>Trivandrum.</em>
+                </h2>
+
+                <p>
+                    I went to Trivandrum to meet two good friends.
+                </p>
+
+                <p>
+                    One lazes around in a temple decked in aristocracy.
+                    The other is rich because she has a golden heart.
+                </p>
+
+                <p>
+                    I enjoyed every bit of it.
+                </p>
+
+                <p>
+                    The drive.
+                    The beaches.
+                    The food.
+                    The company.
+                </p>
+
+                <p>
+                    And, of course,
+                    <strong>you refusing to sing.</strong>
+                </p>
+
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Trivandrum memory selector
+                    </span>
+
+                    <strong>
+                        Pick a memory.
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="trivandrumMemory('drive')">
+                            🚗 The drive
+                        </button>
+
+                        <button class="interaction-button" onclick="trivandrumMemory('beach')">
+                            🌊 The beaches
+                        </button>
+
+                        <button class="interaction-button" onclick="trivandrumMemory('food')">
+                            🍛 The food
+                        </button>
+
+                        <button class="interaction-button" onclick="trivandrumMemory('sing')">
+                            🎤 The singing
+                        </button>
+
+                    </div>
+
+                    <div id="trivandrum-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     MARCH 2026 — THE SINGING INVESTIGATION
+========================================================= -->
+
+            <article class="event reveal">
+
+                <span class="event-date">
+                    March 2026
+                </span>
+
+                <h2>
+                    The case of the
+                    <em>missing song.</em>
+                </h2>
+
+                <p>
+                    A person who sings melodiously enough
+                    to have earned the title “melting chocolate voice”
+                    somehow refused to provide a live demonstration.
+                </p>
+
+                <p>
+                    This remains one of the great unsolved mysteries
+                    of our time.
+                </p>
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Official investigation
+                    </span>
+
+                    <strong>
+                        Did she sing?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="singingInvestigation('yes')">
+                            Yes
+                        </button>
+
+                        <button class="interaction-button" onclick="singingInvestigation('no')">
+                            No
+                        </button>
+
+                        <button class="interaction-button" onclick="singingInvestigation('maybe')">
+                            She was suspiciously quiet
+                        </button>
+
+                    </div>
+
+                    <div id="singing-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SEPTEMBER 2026 — THE CALL
+========================================================= -->
+
+            <article class="event reveal" style="
+    padding-bottom:100px;
+  ">
+
+                <span class="event-date">
+                    September 2026
+                </span>
+
+                <h2>
+                    I decided to call you.
+                </h2>
+
+                <p>
+                    Which would have been the normal thing to do.
+                </p>
+
+                <p>
+                    Pick up the phone.
+                    Say happy birthday.
+                    Have a conversation.
+                </p>
+
+                <p>
+                    Simple.
+                </p>
+
+                <p>
+                    Except...
+                </p>
+
+
+                <div class="artifact">
+
+                    <span class="artifact-label">
+                        Decision archive · Case #Final
+                    </span>
+
+                    <strong>
+                        What did I actually do?
+                    </strong>
+
+                    <div class="button-row">
+
+                        <button class="interaction-button" onclick="finalDecision('call')">
+                            Call her
+                        </button>
+
+                        <button class="interaction-button" onclick="finalDecision('normal')">
+                            Do something normal
+                        </button>
+
+                        <button class="interaction-button" onclick="finalDecision('website')">
+                            Make a website
+                        </button>
+
+                    </div>
+
+                    <div id="final-decision-answer" class="reveal-answer"></div>
+
+                </div>
+
+            </article>
+
+
+            <!-- =========================================================
+     SECTION 4 END
+========================================================= -->
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+     FINAL SECTION
+     
+     The actual final copy + final interaction
+     will be added in Section 4.
+========================================================= -->
+
+    <section class="final">
+
+        <div class="final-inner reveal">
+
+            <div class="eyebrow">
+                September 2026
+            </div>
+
+            <h2>
+                There are still
+                <br>
+                a few things
+                <em>left to say.</em>
+            </h2>
+
+            <p>
+                Mostly the things that don't fit neatly
+                into a timeline.
+            </p>
+
+            <p>
+                You are honest in a way that makes people feel safe.
+                Emotional in a way that makes things feel real.
+                Loyal in a way that is increasingly rare.
+            </p>
+
+            <p>
+                And somehow, between books, beaches, cats,
+                paintings, songs and all those letters,
+                you became someone I am genuinely very glad I found.
+            </p>
+
+            <p>
+                I suppose that's what this rather unnecessarily
+                elaborate archive was trying to say all along.
+            </p>
+
+            <p>
+                <em>
+                    I like having you in my story.
+                    Quite a lot, actually.
+                </em>
+            </p>
+
+            <div class="birthday">
+                Happy Birthday, lufu. 🌻
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <footer>
+        Made with an unreasonable amount of HTML.
+    </footer>
+
+
+    <!-- =========================================================
+     JAVASCRIPT
+     
+     SECTION 5 WILL GO HERE.
+========================================================= -->
+
+    <script>
+
+        /* =========================================================
+           BIRTHDAY ARCHIVE
+           FINAL JAVASCRIPT
+        ========================================================= */
+
+
+        /* =========================================================
+           01. SCROLL REVEAL
+        ========================================================= */
+
+        const revealObserver =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(entry => {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add("visible");
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        document
+            .querySelectorAll(".reveal")
+            .forEach(element => {
+
+                revealObserver.observe(element);
+
+            });
+
+
+        /* =========================================================
+           02. SMALL HELPER
+        ========================================================= */
+
+        function showAnswer(id, text) {
+
+            const element = document.getElementById(id);
+
+            if (!element) return;
+
+            element.textContent = text;
+
+            element.classList.add("visible");
+
+        }
+
+
+        /* =========================================================
+           03. FIVE DAY DELIBERATION
+        ========================================================= */
+
+        function deliberation(choice) {
+
+            let message = "";
+
+            if (choice === "yes") {
+
+                message =
+                    "Correct answer. Unfortunately, it took five days to arrive.";
+
+            }
+
+            if (choice === "no") {
+
+                message =
+                    "A respectable decision. Also completely incorrect.";
+
+            }
+
+            if (choice === "five") {
+
+                message =
+                    "Ah. You understand the historical record.";
+
+            }
+
+            showAnswer(
+                "deliberation-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           04. BOOK DIAGNOSIS
+        ========================================================= */
+
+        function bookDiagnosis(choice) {
+
+            let message = "";
+
+            if (choice === "chaos") {
+
+                message =
+                    "A strong possibility. Murder + heartbreak is quite the literary diet.";
+
+            }
+
+            if (choice === "taste") {
+
+                message =
+                    "Correct, but suspiciously diplomatic.";
+
+            }
+
+            if (choice === "both") {
+
+                message =
+                    "Exactly. The official diagnosis: excellent taste with beautifully questionable emotional choices.";
+
+            }
+
+            showAnswer(
+                "book-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           05. CAT MEMORY
+        ========================================================= */
+
+        function catMemory(choice) {
+
+            let message = "";
+
+            if (choice === 0) {
+
+                message =
+                    "Ouch. I object to this historical revisionism.";
+
+            }
+
+            if (choice === 1) {
+
+                message =
+                    "Only one? Please respect the memory department.";
+
+            }
+
+            if (choice === "all") {
+
+                message =
+                    "Correct. Sometimes I remember things. I am perfect, remember?";
+
+            }
+
+            showAnswer(
+                "cat-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           06. GITLAB PIPELINE
+        ========================================================= */
+
+        function runPipeline() {
+
+            const bar =
+                document.getElementById(
+                    "pipeline-bar"
+                );
+
+            const answer =
+                document.getElementById(
+                    "pipeline-answer"
+                );
+
+            if (!bar || !answer) return;
+
+            bar.style.width = "15%";
+
+            answer.textContent =
+                "Installing courage...";
+
+            setTimeout(() => {
+
+                bar.style.width = "42%";
+
+                answer.textContent =
+                    "Compiling birthday feelings...";
+
+            }, 700);
+
+            setTimeout(() => {
+
+                bar.style.width = "71%";
+
+                answer.textContent =
+                    "Waiting for absolutely unnecessary amount of time...";
+
+            }, 1400);
+
+            setTimeout(() => {
+
+                bar.style.width = "100%";
+
+                answer.textContent =
+                    "✓ Build passed. Birthday message deployed.";
+
+            }, 2300);
+
+        }
+
+
+        /* =========================================================
+           07. LINKEDIN EMBARRASSMENT
+        ========================================================= */
+
+        function linkedinIncident() {
+
+            const bar =
+                document.getElementById(
+                    "embarrassment-bar"
+                );
+
+            const level =
+                document.getElementById(
+                    "embarrassment-level"
+                );
+
+            const answer =
+                document.getElementById(
+                    "embarrassment-answer"
+                );
+
+            const value = 87;
+
+            bar.style.width = value + "%";
+
+            level.textContent = "8.7";
+
+            answer.textContent =
+                "And yet somehow, this was not the last time I embarrassed myself.";
+
+        }
+
+
+        /* =========================================================
+           08. WAVES
+        ========================================================= */
+
+        function wavePreference(value) {
+
+            const answer =
+                document.getElementById(
+                    "wave-answer"
+                );
+
+            const number =
+                Number(value);
+
+            if (number < 35) {
+
+                answer.textContent =
+                    "Pune is making a respectable case.";
+
+            }
+
+            else if (number < 70) {
+
+                answer.textContent =
+                    "A diplomatic answer. I respect it.";
+
+            }
+
+            else if (number < 90) {
+
+                answer.textContent =
+                    "The waves are clearly winning.";
+
+            }
+
+            else {
+
+                answer.textContent =
+                    "There it is. The ocean has claimed you.";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           09. RAVENCLAW
+        ========================================================= */
+
+        function ravenclaw(choice) {
+
+            if (choice === "yes") {
+
+                showAnswer(
+                    "ravenclaw-answer",
+                    "Correct. The Sorting Hat has excellent taste."
+                );
+
+            }
+
+            else {
+
+                showAnswer(
+                    "ravenclaw-answer",
+                    "Too late. The paperwork has already been filed."
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           10. GUITAR AUDIO
+        ========================================================= */
+
+        function guitarReason(choice) {
+
+            let message = "";
+
+            if (choice === "music") {
+
+                message =
+                    "Beautiful answer. Unfortunately, the evidence says otherwise.";
+
+            }
+
+            if (choice === "buddy") {
+
+                message =
+                    "A perfectly respectable cover story.";
+
+            }
+
+            if (choice === "showoff") {
+
+                message =
+                    "There! Accept it and move on.";
+
+            }
+
+            showAnswer(
+                "guitar-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           11. INSTAGRAM
+        ========================================================= */
+
+        function instagramReveal() {
+
+            showAnswer(
+                "instagram-answer",
+                "The problem was that you were pretty AND talented. Frankly, that felt excessive."
+            );
+
+        }
+
+
+        /* =========================================================
+           12. VOICE ANALYSIS
+        ========================================================= */
+
+        function voiceAnalysis() {
+
+            const bars =
+                document.querySelectorAll(
+                    "#voice-wave span"
+                );
+
+            bars.forEach((bar, index) => {
+
+                bar.style.transition =
+                    "height .25s ease";
+
+                bar.style.height =
+                    (25 + Math.random() * 70) + "%";
+
+                bar.style.transitionDelay =
+                    (index * 35) + "ms";
+
+            });
+
+            showAnswer(
+                "voice-answer",
+                "Scientific conclusion: dangerously soothing. Further testing is strongly recommended."
+            );
+
+        }
+
+
+        /* =========================================================
+           13. MEETING STATUS
+        ========================================================= */
+
+        function meetingStatus() {
+
+            showAnswer(
+                "meeting-answer",
+                "Well... to travel between states, I guess I was more awesome than I realized."
+            );
+
+        }
+
+
+        /* =========================================================
+           14. BOOK GIFT
+        ========================================================= */
+
+        function bookGift(choice) {
+
+            let message = "";
+
+            if (choice === "excellent") {
+
+                message =
+                    "Your generosity is admirable. Your literary assessment is less convincing.";
+
+            }
+
+            if (choice === "questionable") {
+
+                message =
+                    "Correct. The committee appreciates your honesty.";
+
+            }
+
+            if (choice === "please") {
+
+                message =
+                    "Understood. This portion of the archive will be sealed.";
+
+            }
+
+            showAnswer(
+                "book-gift-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           15. RESPECT METER
+        ========================================================= */
+
+        function respectMeter() {
+
+            const bar =
+                document.getElementById(
+                    "respect-bar"
+                );
+
+            bar.style.width = "96%";
+
+            showAnswer(
+                "respect-answer",
+                "Meter overloaded. Apparently getting to know you had consequences."
+            );
+
+        }
+
+
+        /* =========================================================
+           16. DICTIONARY OF LOST WORDS
+        ========================================================= */
+
+        function loseWords() {
+
+            const counter =
+                document.getElementById(
+                    "word-count"
+                );
+
+            let value = 100;
+
+            counter.textContent =
+                value + "%";
+
+            const interval =
+                setInterval(() => {
+
+                    value -= 10;
+
+                    counter.textContent =
+                        Math.max(value, 0) + "%";
+
+                    if (value <= 0) {
+
+                        clearInterval(interval);
+
+                    }
+
+                }, 80);
+
+
+            setTimeout(() => {
+
+                showAnswer(
+                    "words-answer",
+                    "No words found. This appears to be your fault."
+                );
+
+            }, 900);
+
+        }
+
+
+        /* =========================================================
+           17. GURU LEVEL
+        ========================================================= */
+
+        function guruLevel(choice) {
+
+            let message = "";
+
+            if (choice === "simple") {
+
+                message =
+                    "A surprisingly reasonable choice.";
+
+            }
+
+            if (choice === "deep") {
+
+                message =
+                    "Now we're getting somewhere.";
+
+            }
+
+            if (choice === "thesis") {
+
+                message =
+                    "Excellent. Please prepare the bibliography.";
+
+            }
+
+            showAnswer(
+                "guru-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           18. LETTER INVESTIGATION
+        ========================================================= */
+
+        function letterInvestigation() {
+
+            showAnswer(
+                "letter-answer",
+                "Evidence suggests life happened. The conspiring parties remain emotionally unavailable for comment."
+            );
+
+        }
+
+
+        /* =========================================================
+           19. ONEPLUS
+        ========================================================= */
+
+        function convertOnePlus() {
+
+            const bar =
+                document.getElementById(
+                    "oneplus-bar"
+                );
+
+            bar.style.width = "98%";
+
+            showAnswer(
+                "oneplus-answer",
+                "Conversion failed. Subject remains loyal to OnePlus."
+            );
+
+        }
+
+
+        /* =========================================================
+           20. MALAYSIA
+        ========================================================= */
+
+        function malaysiaDuration(value) {
+
+            const months =
+                Number(value);
+
+            const answer =
+                document.getElementById(
+                    "malaysia-answer"
+                );
+
+            if (months <= 2) {
+
+                answer.textContent =
+                    "Optimistic estimate.";
+
+            }
+
+            else if (months <= 4) {
+
+                answer.textContent =
+                    "Three months. Yes. This feels historically accurate.";
+
+            }
+
+            else if (months <= 8) {
+
+                answer.textContent =
+                    "At this point, Malaysia has become a recurring character.";
+
+            }
+
+            else {
+
+                answer.textContent =
+                    "This is no longer a trip story. This is a cinematic universe.";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           21. VIDEO EMBARRASSMENT
+        ========================================================= */
+
+        function videoEmbarrassment() {
+
+            const bar =
+                document.getElementById(
+                    "video-embarrassment-bar"
+                );
+
+            const number =
+                document.getElementById(
+                    "video-embarrassment-number"
+                );
+
+            bar.style.width = "93%";
+
+            number.textContent =
+                "9.3 / 10";
+
+            showAnswer(
+                "video-embarrassment-answer",
+                "At this point, embarrassment has stopped being an event and become a personality trait."
+            );
+
+        }
+
+
+        /* =========================================================
+           22. SUNFLOWER
+        ========================================================= */
+
+        function bloomSunflower() {
+
+            const flower =
+                document.getElementById(
+                    "sunflower"
+                );
+
+            flower.style.transform =
+                "scale(1.35) rotate(8deg)";
+
+            flower.style.filter =
+                "drop-shadow(0 0 15px rgba(233,184,77,.55))";
+
+            showAnswer(
+                "sunflower-answer",
+                "Some things stay with you long after the moment is over."
+            );
+
+        }
+
+
+        /* =========================================================
+           23. TRIVANDRUM
+        ========================================================= */
+
+        function trivandrumMemory(choice) {
+
+            let message = "";
+
+            if (choice === "drive") {
+
+                message =
+                    "A good drive, good company, and nowhere particularly urgent to be.";
+
+            }
+
+            if (choice === "beach") {
+
+                message =
+                    "Of course the beaches make the archive. You and the waves are practically co-authors.";
+
+            }
+
+            if (choice === "food") {
+
+                message =
+                    "Important historical documentation. Food must never be omitted.";
+
+            }
+
+            if (choice === "sing") {
+
+                message =
+                    "You selected the restricted file. Unfortunately, it contains no singing.";
+
+            }
+
+            showAnswer(
+                "trivandrum-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           24. SINGING INVESTIGATION
+        ========================================================= */
+
+        function singingInvestigation(choice) {
+
+            let message = "";
+
+            if (choice === "yes") {
+
+                message =
+                    "False information detected. The witness has been very clear about refusing to sing.";
+
+            }
+
+            if (choice === "no") {
+
+                message =
+                    "Correct. The case remains open.";
+
+            }
+
+            if (choice === "maybe") {
+
+                message =
+                    "Suspiciously quiet. Extremely suspicious.";
+
+            }
+
+            showAnswer(
+                "singing-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           25. FINAL DECISION
+        ========================================================= */
+
+        function finalDecision(choice) {
+
+            let message = "";
+
+            if (choice === "call") {
+
+                message =
+                    "That would have been normal. Which is precisely why it didn't happen.";
+
+            }
+
+            if (choice === "normal") {
+
+                message =
+                    "Tempting. But apparently normal was never the plan.";
+
+            }
+
+            if (choice === "website") {
+
+                message =
+                    "Correct. Apparently making an entire website was easier than simply calling you.";
+
+            }
+
+            showAnswer(
+                "final-decision-answer",
+                message
+            );
+
+        }
+
+
+        /* =========================================================
+           26. LITTLE EASTER EGG
+        ========================================================= */
+
+        /*
+           If she clicks the title three times,
+           something mildly ridiculous happens.
+        */
+
+        let titleClicks = 0;
+
+        const heroTitle =
+            document.querySelector(".hero h1");
+
+        if (heroTitle) {
+
+            heroTitle.style.cursor = "pointer";
+
+            heroTitle.addEventListener(
+                "click",
+                () => {
+
+                    titleClicks++;
+
+                    if (titleClicks === 3) {
+
+                        heroTitle.innerHTML =
+                            'A Brief History<br>of <span>You.</span> 🌻';
+
+                        setTimeout(() => {
+
+                            heroTitle.innerHTML =
+                                'A Brief History<br>of <span>You.</span>';
+
+                        }, 2200);
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           27. FINAL CONSOLE MESSAGE
+        ========================================================= */
+
+        console.log(
+            "%cHappy Birthday 🌻",
+            "color:#c87972;font-size:20px;font-weight:bold;"
+        );
+
+        console.log(
+            "Some things are easier to say in HTML."
+        );
+
+    </script>
+
+
+</body>
+
+</html>
