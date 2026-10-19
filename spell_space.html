@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#091116">
+    <title>Earth / Letters — Landsat Studio</title>
+
+    <style>
+        :root {
+            --bg: #050810;
+            --panel: #0c1221;
+            --text: #edf4ff;
+            --muted: #8c9bb8;
+            --accent: #8be9fd;
+            --border: #25304b;
+            --nebula: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(ellipse at top right, #1c3432, var(--bg) 55%);
+            color: var(--text);
+            font-family: Inter, system-ui, sans-serif;
+        }
+
+        .page {
+            width: min(100% - 32px, 960px);
+            margin: auto;
+            padding: 28px 0 50px;
+        }
+
+        header,
+        .preview-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header {
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .tag,
+        .muted {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .hero {
+            padding: 48px 0 28px;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: clamp(42px, 8vw, 76px);
+            line-height: 1;
+            letter-spacing: -3px;
+            margin: 16px 0;
+        }
+
+        .intro {
+            color: var(--muted);
+            max-width: 540px;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .panel {
+            background: rgba(20, 34, 41, .94);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font: inherit;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 1px solid var(--accent);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .presets,
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        button,
+        .link {
+            font: inherit;
+            cursor: pointer;
+            border-radius: 9px;
+            padding: 11px 14px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .preset,
+        .secondary,
+        .link {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .preset {
+            border-radius: 50px;
+            padding: 7px 12px;
+            color: var(--muted);
+        }
+
+        button:hover,
+        .link:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .primary {
+            background: var(--accent);
+            color: #152016;
+            border: 1px solid var(--accent);
+        }
+
+        .generate {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button:disabled {
+            opacity: .5;
+            cursor: wait;
+        }
+
+        .preview-stage {
+            min-height: 260px;
+            margin-top: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            padding: 12px;
+            background:
+                linear-gradient(#243b3b12 1px, transparent 1px),
+                linear-gradient(90deg, #243b3b12 1px, transparent 1px),
+                radial-gradient(ellipse, #284440, #071015 75%);
+            background-size: 24px 24px, 24px 24px, auto;
+        }
+
+        #result {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .placeholder {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        #status {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        .letter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .letter-card {
+            min-width: 0;
+            overflow: hidden;
+            background: #091419;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .letter-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            background: #17272e;
+        }
+
+        .letter-info {
+            padding: 10px;
+        }
+
+        .letter-name {
+            color: var(--accent);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .letter-place {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+            margin: 7px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .letter-info a {
+            color: var(--accent);
+            font-size: 11px;
+            text-underline-offset: 3px;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            margin-top: 28px;
+            padding-top: 20px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        footer a {
+            color: var(--accent);
+        }
+
+        @media(max-width: 520px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 16px;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+
+            .letter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        body {
+            background:
+                radial-gradient(ellipse at 15% 15%,
+                    rgba(91, 65, 180, 0.20), transparent 38%),
+                radial-gradient(ellipse at 85% 45%,
+                    rgba(30, 120, 180, 0.12), transparent 35%),
+                #050810;
+            position: relative;
+        }
+
+        /* Fine stars */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, #ffffffa0 50%, transparent 100%),
+                radial-gradient(1px 1px at 70% 12%, #ffffff90 50%, transparent 100%),
+                radial-gradient(2px 2px at 35% 65%, #8be9fd90 50%, transparent 100%),
+                radial-gradient(1px 1px at 85% 80%, #ffffff80 50%, transparent 100%),
+                radial-gradient(1px 1px at 50% 40%, #ffffff70 50%, transparent 100%);
+            background-size: 280px 240px, 350px 310px, 420px 360px,
+                300px 280px, 380px 320px;
+        }
+
+        /* Mission-console panels */
+        .panel {
+            background: rgba(12, 18, 33, 0.88);
+            border: 1px solid #293754;
+            border-radius: 16px;
+            box-shadow: 0 16px 60px #00000030;
+            backdrop-filter: blur(12px);
+        }
+
+        .brand {
+            letter-spacing: 3px;
+        }
+
+        .brand::before {
+            content: "✦";
+            color: var(--accent);
+            margin-right: 9px;
+        }
+
+        .eyebrow {
+            color: var(--accent);
+            letter-spacing: 3px;
+        }
+
+        h1 {
+            letter-spacing: -3px;
+            text-shadow: 0 0 45px #8be9fd15;
+        }
+
+        .primary {
+            box-shadow: 0 0 24px #8be9fd18;
+        }
+
+        .primary:hover:not(:disabled) {
+            box-shadow: 0 0 28px #8be9fd40;
+            transform: translateY(-2px);
+        }
+
+        .preview-stage {
+            background:
+                radial-gradient(ellipse at center,
+                    #1a2944 0%, #0b1220 55%, #03060c 100%);
+            border-color: #293754;
+        }
+
+        .letter-card {
+            background: #080e19;
+            border-color: #293754;
+            transition: transform 180ms ease, border-color 180ms ease;
+        }
+
+        .letter-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+        }
+
+        .letter-name {
+            color: var(--accent);
+        }
+
+        footer {
+            border-color: #293754;
+        }
+
+        /* Mobile layout */
+        @media (max-width: 600px) {
+            .page {
+                width: min(100% - 24px, 960px);
+                padding-top: 18px;
+            }
+
+            header {
+                align-items: flex-start;
+            }
+
+            .tag {
+                text-align: right;
+                line-height: 1.6;
+            }
+
+            .hero {
+                padding: 38px 0 24px;
+            }
+
+            h1 {
+                font-size: clamp(40px, 11vw, 60px);
+                letter-spacing: -2px;
+            }
+
+            .panel {
+                padding: 15px;
+                border-radius: 13px;
+            }
+
+            .letter-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .actions button {
+                flex: 1 1 100%;
+                min-height: 44px;
+            }
+
+            .generate {
+                min-height: 48px;
+            }
+
+            .preview-stage {
+                min-height: 200px;
+                padding: 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        .seed-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .seed-row input {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .seed-row button {
+            white-space: nowrap;
+        }
+
+        @media (max-width: 420px) {
+            .seed-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="page">
+        <header>
+            <div class="brand">SATELLITE TYPOGRAPHY</div>
+            <div class="tag">Written by nature. Seen from space.</div>
+        </header>
+
+        <section class="hero">
+            <div class="eyebrow">The poetry of a living planet</div>
+            <h1>Make Earth<br>Spell Your Name.</h1>
+            <p class="intro">
+                Somewhere on this planet, nature has already
+                written your letters.
+                Let landscapes, flowing waters and distant coastlines spell your name across a world that is endlessly
+                extraordinary.
+            </p>
+        </section>
+
+        <section class="panel">
+            <label for="word">YOUR WORD OR NAME</label>
+            <input id="word" maxlength="80" value="EARTH" placeholder="Type your name...">
+
+            <div class="presets">
+                <button class="preset" data-word="EARTH">EARTH</button>
+                <button class="preset" data-word="OCEAN">OCEAN</button>
+                <button class="preset" data-word="EXPLORE">EXPLORE</button>
+            </div>
+            <label for="seed">ARTWORK VARIANT</label>
+            <div class="seed-row">
+                <input id="seed" value="mysticwaves" placeholder="Enter a variant seed">
+                <button class="secondary" id="randomize">
+                    ↻ Randomize
+                </button>
+            </div>
+
+            <button class="primary generate" id="generate">
+                Generate satellite artwork ↗
+            </button>
+        </section>
+
+        <section class="panel">
+            <div class="preview-head">
+                <strong>FIELD NOTES / LETTER LOCATIONS</strong>
+                <span class="tag" id="letter-count">0 LETTERS</span>
+            </div>
+            <p class="intro">
+                Every letter holds a piece of our planet. Discover the place that bring your name to life.
+            </p>
+            <div id="letter-grid" class="letter-grid">
+                <div class="placeholder">Generate a word to explore its letters.</div>
+            </div>
+        </section>
+
+
+        <section class="panel">
+            <div class="preview-head">
+                <strong>YOUR CREATION</strong>
+                <span class="tag" id="resolution">Stitched</span>
+            </div>
+
+            <div class="preview-stage">
+                <div class="placeholder" id="placeholder">
+                    Your artwork will appear here.<br>
+                    Ready for a new perspective?
+                </div>
+                <img id="result" alt="Name rendered in Landsat imagery" hidden>
+            </div>
+
+            <div id="status" role="status" aria-live="polite">
+                Enter a word and generate your artwork.
+            </div>
+
+            <div class="actions">
+                <button class="secondary" id="download" disabled>↓ Download PNG</button>
+                <button class="secondary" id="share" disabled>Copy image link</button>
+                <!-- <button class="secondary" id="randomize">↻ New variant</button> -->
+            </div>
+        </section>
+
+        <footer>
+            Inspired by NASA's Your Name in Landsat.<br>
+            Imagery: NASA / USGS Landsat. This is an unofficial project
+            and is not endorsed by NASA.
+            <br>
+            <a href="https://science.nasa.gov/specials/your-name-in-landsat/" target="_blank" rel="noreferrer">Explore
+                NASA's original project ↗</a>
+            <br>
+            <a href="https://landsat.pranavkarra.me/" target="_blank" rel="noreferrer">Landsat Alphabet API ↗</a>
+        </footer>
+    </main>
+
+    <script>
+        const API = "https://landsat.pranavkarra.me/v1/name/";
+
+        const $ = id => document.getElementById(id);
+        const word = $("word");
+        const size = { value: "1024" };
+        const gap = { value: "12" };
+        const seed = $("seed");
+        const result = $("result");
+        const status = $("status");
+        const generate = $("generate");
+        const download = $("download");
+        const share = $("share");
+
+        let imageUrl = "";
+        let requestNumber = 0;
+
+        function makeUrl(extension) {
+            const text = word.value.trim().replace(/\s+/g, " ");
+            if (!text) throw new Error("Please enter a word or name.");
+
+            const params = new URLSearchParams({
+                size: size.value,
+                gap: gap.value,
+                seed: seed.value.trim() || "mysticwaves"
+            });
+
+            return API + encodeURIComponent(text) + "." + extension + "?" + params;
+        }
+
+        function findValue(obj, keys) {
+            for (const key of keys) {
+                if (obj && obj[key] != null && obj[key] !== "") {
+                    const value = obj[key];
+                    if (typeof value !== "object") return String(value);
+                }
+            }
+            return "";
+        }
+
+        function getCoordinates(letter) {
+            const lat = findValue(letter, ["latitude", "lat"]);
+            const lon = findValue(letter, ["longitude", "lon", "lng"]);
+            if (lat && lon) return lat + ", " + lon;
+
+            const coords = letter.coordinates;
+            if (Array.isArray(coords)) return coords.join(", ");
+            if (typeof coords === "string") return coords;
+
+            return "";
+        }
+
+        function safeLink(url) {
+            try {
+                const parsed = new URL(url);
+                return ["https:", "http:"].includes(parsed.protocol)
+                    ? parsed.href : "";
+            } catch {
+                return "";
+            }
+        }
+
+        function addLink(container, url, label) {
+            const href = safeLink(url);
+            if (!href) return;
+
+            const link = document.createElement("a");
+            link.href = href;
+            link.target = "_blank";
+            link.rel = "noreferrer";
+            link.textContent = label;
+            container.appendChild(link);
+        }
+
+        function renderLetters(data) {
+            const grid = $("letter-grid");
+            grid.replaceChildren();
+
+            const letters = Array.isArray(data.letters) ? data.letters : [];
+            $("letter-count").textContent = letters.length + " LETTERS";
+
+            if (!letters.length) {
+                grid.textContent = "No individual letter data was returned.";
+                return;
+            }
+
+            letters.forEach((letter, index) => {
+                const card = document.createElement("article");
+                card.className = "letter-card";
+
+                const image = document.createElement("img");
+                const tileUrl = safeLink(
+                    findValue(letter, ["tileUrl", "imageUrl", "image_url", "url"])
+                );
+
+                if (tileUrl) {
+                    image.src = tileUrl;
+                    image.alt = "Satellite tile for letter " +
+                        (letter.letter || index + 1);
+                    image.loading = "lazy";
+                } else {
+                    image.alt = "Tile image URL unavailable";
+                    image.style.display = "none";
+                }
+
+                const info = document.createElement("div");
+                info.className = "letter-info";
+
+                const glyph = document.createElement("div");
+                glyph.className = "letter-name";
+                glyph.textContent = findValue(letter, ["letter", "character", "char"])
+                    || ("#" + (index + 1));
+
+                const place = document.createElement("div");
+                place.className = "letter-place";
+
+                // const location = findValue(letter, [
+                //     "location", "place", "name", "title", "locationName"
+                // ]);
+                const location = findValue(letter, ["id"]);
+                const parts = location.split("-");
+                const placeName = parts.slice(2)
+                    .join(" ")
+                    .replace(/([a-z])([A-Z])/g, "$1 $2")
+                    .replace(/\b\w/g, c => c.toUpperCase());
+
+                const coordinates = getCoordinates(letter);
+
+                place.textContent = placeName || "Location name not provided";
+
+                if (coordinates) {
+                    place.textContent += "\n" + coordinates;
+                }
+
+                info.append(glyph, place);
+
+                const source = findValue(letter, [
+                    "sourceUrl", "source_url", "source", "attributionUrl"
+                ]);
+
+                addLink(info, source, "Original source ↗");
+
+                if (coordinates) {
+                    const mapUrl = "https://www.google.com/maps/search/?api=1&query="
+                        + encodeURIComponent(coordinates);
+                    addLink(info, mapUrl, "View on map ↗");
+                }
+
+                card.append(image, info);
+                grid.appendChild(card);
+            });
+        }
+
+        async function createArtwork() {
+            const currentRequest = ++requestNumber;
+            generate.disabled = true;
+            download.disabled = true;
+            share.disabled = true;
+            status.textContent = "Generating your satellite artwork...";
+
+            try {
+                const pngUrl = makeUrl("png");
+                const jsonUrl = makeUrl("json");
+
+                const imagePromise = new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => reject(
+                        new Error("The artwork image could not be loaded.")
+                    );
+                    img.src = pngUrl;
+                });
+
+                const jsonPromise = fetch(jsonUrl).then(response => {
+                    if (!response.ok) throw new Error("Letter metadata unavailable.");
+                    return response.json();
+                });
+
+                const [_, data] = await Promise.all([imagePromise, jsonPromise]);
+
+                if (currentRequest !== requestNumber) return;
+
+                imageUrl = data.renderUrl || pngUrl;
+                result.src = imageUrl;
+                result.hidden = false;
+                $("placeholder").hidden = true;
+                $("resolution").textContent = size.value + " px";
+
+                renderLetters(data);
+
+                download.disabled = false;
+                share.disabled = false;
+                status.textContent = "Let the world see.";
+            } catch (error) {
+                if (currentRequest === requestNumber) {
+                    status.textContent = error.message +
+                        " Check your connection and try again.";
+                }
+            } finally {
+                if (currentRequest === requestNumber) generate.disabled = false;
+            }
+        }
+
+        generate.addEventListener("click", createArtwork);
+
+        document.querySelectorAll("[data-word]").forEach(button => {
+            button.addEventListener("click", () => {
+                word.value = button.dataset.word;
+                createArtwork();
+            });
+        });
+
+        seed.addEventListener("change", createArtwork);
+
+        $("randomize").addEventListener("click", () => {
+            seed.value = "variant-" + Math.random().toString(36).slice(2, 10);
+            createArtwork();
+        });
+
+
+        word.addEventListener("keydown", event => {
+            if (event.key === "Enter") createArtwork();
+        });
+
+        download.addEventListener("click", async () => {
+            if (!imageUrl) return;
+            status.textContent = "Preparing your download...";
+
+            try {
+                const response = await fetch(imageUrl);
+                if (!response.ok) throw new Error();
+
+                const blob = await response.blob();
+                const objectUrl = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+
+                link.href = objectUrl;
+                link.download = (word.value.trim() || "landsat-art")
+                    .replace(/[^\p{L}\p{N}-]+/gu, "-") + ".png";
+
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+                status.textContent = "Download started.";
+            } catch {
+                status.textContent = "Download blocked. Opening the image instead.";
+                window.open(imageUrl, "_blank", "noopener");
+            }
+        });
+
+        share.addEventListener("click", async () => {
+            if (!imageUrl) return;
+            try {
+                await navigator.clipboard.writeText(imageUrl);
+                status.textContent = "Image link copied.";
+            } catch {
+                status.textContent = "Copy this link: " + imageUrl;
+            }
+        });
+
+        createArtwork();
+    </script>
+</body>
+
+</html>
