@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Magical Birthday | Hogwarts</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --gold: #e6bd70;
+      --cream: #f6e8c8;
+      --dark: #090d19;
+      --parchment: #e9d3a6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--dark);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+      text-align: center;
+    }
+
+    #stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff1c2;
+      border-radius: 50%;
+      animation: twinkle 3s infinite alternate;
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: .15;
+        transform: scale(.7);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1.3);
+      }
+    }
+
+    section {
+      min-height: 100vh;
+      padding: 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1,
+    h2 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 5vw, 3rem);
+    }
+
+    p {
+      font-size: 1.35rem;
+      line-height: 1.7;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 5px;
+      font-family: Cinzel, serif;
+      font-size: .75rem;
+    }
+
+    button {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 15px 30px;
+      font-family: Cinzel, serif;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: .3s;
+      margin: 10px;
+    }
+
+    button:hover {
+      background: var(--gold);
+      color: var(--dark);
+      box-shadow: 0 0 25px #e6bd7066;
+      transform: translateY(-3px);
+    }
+
+    .castle {
+      font-size: clamp(5rem, 15vw, 10rem);
+      filter: drop-shadow(0 0 25px #dca84c88);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .letter {
+      background: var(--parchment);
+      color: #382716;
+      max-width: 600px;
+      padding: 40px;
+      border: 9px double #967341;
+      box-shadow: 0 0 50px #d9a94d33;
+      transform: rotate(-1deg);
+      width: 100%;
+    }
+
+    .letter h2 {
+      color: #563719;
+    }
+
+    .letter p {
+      font-size: 1.3rem;
+    }
+
+    .signature {
+      font-family: cursive;
+      font-size: 2rem;
+      color: #633e20;
+    }
+
+    .houses {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(130px, 200px));
+      gap: 18px;
+      margin: 30px 0;
+    }
+
+    .house {
+      padding: 25px 10px;
+      border: 1px solid #ffffff44;
+      background: #ffffff08;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    .house:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 25px #e6bd7066;
+    }
+
+    .house .emoji {
+      font-size: 3rem;
+    }
+
+    .house strong {
+      display: block;
+      font-family: Cinzel, serif;
+      margin-top: 12px;
+    }
+
+    #houseMessage {
+      min-height: 55px;
+      color: var(--gold);
+    }
+
+    .candles {
+      font-size: 2.5rem;
+      margin: 25px;
+      cursor: pointer;
+      animation: float 2s infinite;
+    }
+
+    .cake {
+      font-size: 6rem;
+      filter: drop-shadow(0 0 20px #e6bd7066);
+      cursor: pointer;
+    }
+
+    .magic-message {
+      color: var(--gold);
+      font-size: 1.7rem;
+      max-width: 600px;
+      animation: reveal 1.5s ease;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    footer {
+      color: #a99a80;
+      font-size: .9rem;
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quidditch-pitch {
+      position: relative;
+      width: min(90vw, 600px);
+      height: 300px;
+      margin: 25px auto;
+      border: 2px solid #b28b50;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse, #173b32 0%, #0b211e 75%);
+      box-shadow: 0 0 30px #dca84c33;
+      overflow: hidden;
+    }
+
+    .quidditch-pitch::before {
+      content: "";
+      position: absolute;
+      inset: 15px 8%;
+      border: 1px solid #e6bd7055;
+      border-radius: 50%;
+    }
+
+    .hoops {
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      font-size: 2rem;
+      opacity: .7;
+    }
+
+    .pitch-label {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      font-family: Cinzel, serif;
+      font-size: .65rem;
+      letter-spacing: 3px;
+      color: #e6bd7088;
+    }
+
+    .snitch {
+      position: absolute;
+      left: 10%;
+      top: 35%;
+      z-index: 2;
+      margin: 0;
+      padding: 5px;
+      border: none;
+      font-size: 2.5rem;
+      animation: snitchFlight 5s ease-in-out infinite alternate;
+      cursor: pointer;
+      filter: drop-shadow(0 0 12px #ffd700);
+    }
+
+    .snitch:hover {
+      background: transparent;
+      transform: none;
+      box-shadow: none;
+    }
+
+    @keyframes snitchFlight {
+      0% {
+        left: 10%;
+        top: 35%;
+      }
+
+      25% {
+        left: 70%;
+        top: 15%;
+      }
+
+      50% {
+        left: 45%;
+        top: 65%;
+      }
+
+      75% {
+        left: 80%;
+        top: 45%;
+      }
+
+      100% {
+        left: 15%;
+        top: 65%;
+      }
+    }
+
+    button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    button:disabled:hover {
+      background: transparent;
+      color: var(--gold);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="stars"></div>
+
+  <section id="intro">
+    <div class="eyebrow">THE WIZARDING WORLD INVITES YOU</div>
+    <div class="castle">🏰</div>
+    <p>On this very special day...</p>
+    <h1>A Little Magic<br>Awaits You</h1>
+    <p>There is an owl with a very important delivery.</p>
+    <button onclick="showSection('letter')">OPEN YOUR LETTER ✨</button>
+  </section>
+
+  <section id="letter" class="hidden">
+    <div class="eyebrow">MINISTRY OF MAGIC • OFFICIAL NOTICE</div>
+
+    <div class="letter">
+      <h2>Dear Nitya,</h2>
+
+      <p>
+        We are pleased to inform you that your application
+        for another year of magical adventures has been
+        unanimously approved.
+      </p>
+
+      <p>
+        Your qualifications in medicine are impressive.
+        However, we must remind you that diagnosing
+        muggles is no substitute for dealing with
+        misbehaving magical creatures.
+      </p>
+
+      <p>
+        Having known you since our considerably less
+        sophisticated school days, we can confirm that
+        your magical abilities have always been
+        questionable, but your friendship has been
+        exceptional.
+      </p>
+
+      <p>
+        You are hereby summoned to Hogwarts for a
+        celebration of considerable importance.
+        Attendance is compulsory.
+      </p>
+
+      <p class="signature">
+        With magical regards,<br>
+        The Hogwarts Staff
+      </p>
+    </div>
+
+    <button onclick="showSection('houses')">
+      ONWARD TO HOGWARTS →
+    </button>
+  </section>
+
+  <section id="houses" class="hidden">
+    <div class="eyebrow">HOGWARTS • THE SORTING CEREMONY</div>
+
+    <h2>Hmm... Interesting!</h2>
+
+    <p>
+      Even the Sorting Hat is finding this one difficult.
+      A doctor by profession, a witch by questionable
+      natural talent...
+    </p>
+
+    <p>
+      Dr. Nityasri, choose your destiny! <br>
+      Manifest well.. Hogwarts has a rather
+      long memory. Some decisions have a way of
+      following you around... ✨
+    </p>
+
+    <div class="houses">
+
+      <div class="house" onclick="chooseHouse('Gryffindor')">
+        <div class="emoji">🦁</div>
+        <strong>GRYFFINDOR</strong>
+        <small>Brave enough to handle anything.</small>
+      </div>
+
+      <div class="house" onclick="chooseHouse('Slytherin')">
+        <div class="emoji">🐍</div>
+        <strong>SLYTHERIN</strong>
+        <small>Ambitious. Strategic. Slightly dangerous.</small>
+      </div>
+
+      <div class="house" onclick="chooseHouse('Ravenclaw')">
+        <div class="emoji">🦅</div>
+        <strong>RAVENCLAW</strong>
+        <small>Brains, brilliance and a little overthinking.</small>
+      </div>
+
+      <div class="house" onclick="chooseHouse('Hufflepuff')">
+        <div class="emoji">🦡</div>
+        <strong>HUFFLEPUFF</strong>
+        <small>Kind-hearted, loyal and everyone's favourite.</small>
+      </div>
+
+    </div>
+
+    <h3 id="houseMessage">
+      The Sorting Hat awaits your decision...
+    </h3>
+
+    <button id="houseContinue" onclick="showSection('hall')" disabled>
+      SELECT YOUR HOUSE FIRST →
+    </button>
+  </section>
+
+  <section id="hall" class="hidden">
+    <div class="eyebrow">HOGWARTS • QUIDDITCH PITCH</div>
+
+    <h2>Ready, Seeker?</h2>
+
+    <p>
+      A birthday celebration isn't complete without
+      a little Quidditch!
+    </p>
+
+    <p>
+      Your mission, Dr. Nityasri, should you choose
+      to accept it:
+    </p>
+
+    <h3> CATCH THE GOLDEN SNITCH! </h3>
+
+    <p>
+      It's fast, it's sneaky and frankly,
+      it has a terrible habit of avoiding doctors.
+    </p>
+
+    <div class="quidditch-pitch">
+      <div class="hoops">⭕ &nbsp; ⭕ &nbsp; ⭕</div>
+
+      <button id="snitch" class="snitch" onclick="catchSnitch()" aria-label="Catch the Golden Snitch">
+        ✨
+      </button>
+
+      <div class="pitch-label">HOGWARTS QUIDDITCH PITCH</div>
+    </div>
+
+    <p id="gameMessage">
+      Tap the Golden Snitch before it escapes!
+    </p>
+
+    <div id="wish" class="hidden">
+      <h2>🏆 YOU CAUGHT IT! 🏆</h2>
+
+      <p class="magic-message">
+        Well played, Seeker!
+        The Golden Snitch has been captured.
+        150 points to... well, you know the drill!
+      </p>
+
+      <button onclick="showSection('surprise')">
+        CLAIM YOUR BIRTHDAY SURPRISE →
+      </button>
+    </div>
+  </section>
+
+  <section id="surprise" class="hidden">
+
+    <div class="eyebrow">
+      A SPECIAL MESSAGE • FROM YOUR FAVOURITE MUGGLE
+    </div>
+
+    <div class="castle">🚂 9¾ 🧱</div>
+
+    <h1>Happy Birthday,<br>Nityasri!</h1>
+
+    <!-- House-specific birthday message -->
+    <div id="houseBirthdayMessage">
+
+      <p>
+        From school-day shenanigans to grown-up responsibilities,
+        from questionable decisions to becoming a doctor...
+        look at us pretending to have our lives together!
+      </p>
+
+      <p>
+        Who knew the girl from school would go on to
+        diagnose actual humans? Quite an upgrade from
+        our classroom days.
+      </p>
+
+    </div>
+
+    <!-- Reveal secret message -->
+    <button onclick="revealSecret()">
+      SWISH & FLICK FOR ONE LAST WISH 🧙🏻‍♀️🔮🪄
+    </button>
+
+    <!-- Hidden heartfelt message -->
+    <p id="secret" class="magic-message hidden">
+      Jokes aside, I'm incredibly lucky to have you in my life.
+      Some friendships make it through every chapter,
+      every version of us and every ridiculous phase.
+      Ours is one of them.
+
+      Here's to more laughter, more adventures,
+      more memories and many more years of friendship.
+
+      May life always be as wonderful as you deserve.
+      Stay magical, Doctor! ❤️
+    </p>
+
+    <p style="font-size:3rem">✨ 🦉 ✨</p>
+
+    <!-- Restart entire experience -->
+    <button onclick="restartExperience()">
+      ↻ EXPERIENCE THE MAGIC AGAIN
+    </button>
+
+  </section>
+
+  <footer>
+    Mischief Managed. ✨
+  </footer>
+
+  <script>
+
+    // Generate magical stars
+    const stars = document.getElementById('stars');
+
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.width = star.style.height =
+        (Math.random() * 3 + 1) + 'px';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      stars.appendChild(star);
+    }
+
+    // Navigate between scenes
+    function showSection(id) {
+      document.querySelectorAll('section').forEach(section => {
+        section.classList.add('hidden');
+      });
+
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Sorting ceremony
+    function chooseHouse(house) {
+      selectedHouse = house;
+
+      document.getElementById('houseMessage').innerText =
+        '✨ The Sorting Hat has chosen... ' + house + '! ✨';
+
+      document.getElementById('houseBirthdayMessage').innerHTML =
+        houseBirthdayMessages[house];
+
+      const continueButton = document.getElementById('houseContinue');
+
+      continueButton.disabled = false;
+      continueButton.innerText = 'ENTER THE GREAT HALL →';
+    }
+
+    // Golden Snitch game
+    function catchSnitch() {
+      const snitch = document.getElementById('snitch');
+
+      // Stop the Snitch from flying
+      snitch.style.animation = 'none';
+      snitch.classList.add('hidden');
+
+      // Announce the victory
+      document.getElementById('gameMessage').innerText =
+        'The Golden Snitch has been caught!';
+
+      document.getElementById('wish').classList.remove('hidden');
+    }
+
+
+    // Secret message
+    function revealSecret() {
+      document.getElementById('secret').classList.remove('hidden');
+    }
+
+    function restartExperience() {
+      // Reset Sorting Hat
+      document.getElementById('houseMessage').innerText = '';
+
+      // Reset Quidditch game
+      const snitch = document.getElementById('snitch');
+      snitch.classList.remove('hidden');
+      snitch.style.animation = '';
+
+      document.getElementById('gameMessage').innerText =
+        'Tap the Golden Snitch before it escapes!';
+
+      // Reset birthday surprise
+      document.getElementById('secret').classList.add('hidden');
+
+      // Reset all interactive sections
+      document.getElementById('wish').classList.add('hidden');
+
+      selectedHouse = '';
+
+      document.getElementById('houseBirthdayMessage').innerHTML = `
+  <p>
+    From school-day shenanigans to grown-up responsibilities,
+    from questionable decisions to becoming a doctor...
+    look at us pretending to have our lives together!
+  </p>
+  <p>
+    Who knew the girl from school would go on to
+    diagnose actual humans? Quite an upgrade from
+    our classroom days.
+  </p>
+`;
+
+      document.getElementById('houseContinue').disabled = true;
+
+      document.getElementById('houseContinue').innerText =
+        'SELECT YOUR HOUSE FIRST →';
+
+      // Return to beginning
+      showSection('intro');
+    }
+
+    let selectedHouse = '';
+
+    const houseBirthdayMessages = {
+      Gryffindor: `
+    <p>
+      From school-day adventures to grown-up responsibilities,
+      we've certainly never been short of courage or questionable
+      decisions. And look at you now, saving actual lives!
+    </p>
+    <p>
+      Gryffindor spirit, a doctor's determination and absolutely
+      no shortage of drama. Some things never change!
+    </p>
+  `,
+
+      Slytherin: `
+    <p>
+      From plotting our way through school to conquering the
+      real world, you've clearly been playing the long game.
+      Becoming a doctor? Quite the impressive power move.
+    </p>
+    <p>
+      Ambitious, brilliant and probably already three steps
+      ahead of everyone else. Honestly, I wouldn't expect
+      anything less of a Slytherin!
+    </p>
+  `,
+
+      Ravenclaw: `
+    <p>
+      From solving school-day mysteries to diagnosing actual
+      medical conditions, your brain has certainly been
+      put to good use. Though I suspect overthinking
+      was your special talent all along!
+    </p>
+    <p>
+      Here's to the Ravenclaw girl who always had a clever answer
+      (or at least a very convincing explanation).
+    </p>
+  `,
+
+      Hufflepuff: `
+    <p>
+      From our school-day adventures to everything life has
+      thrown our way, you've always been one of the
+      constants. And now you're out there making the
+      world a little better, one patient at a time.
+    </p>
+    <p>
+      Same lovely Hufflepuff soul, slightly fancier degree
+      and a whole lot more responsibilities!
+    </p>
+  `
+    };
+
+  </script>
+</body>
+
+</html>
